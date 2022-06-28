@@ -53,6 +53,7 @@ MIDDLEWARE = [
 ]
 
 
+AUTH_USER_MODEL = 'api.User'
 
 
 ROOT_URLCONF = 'qricle.urls'
@@ -89,7 +90,7 @@ WSGI_APPLICATION = 'qricle.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'My_proect',
+        'NAME': 'santoshku',
         'USER': 'postgres',
         'PASSWORD': 'root',
         'HOST':'localhost',

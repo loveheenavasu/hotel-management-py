@@ -4,12 +4,10 @@ from django.db import models
 
 
 
+
 class Role(models.Model):
     role_name = models.CharField(max_length=100)
-    premission = models.CharField(max_length=100)
-
-
-
+    permission = models.CharField(max_length=100)
 
 
 class UserManager(BaseUserManager):
@@ -51,8 +49,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     is_email_verified = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    user = models.CharField(max_length=100)
-    is_user = models.ForeignKey(Role, on_delete=models.CASCADE)
+    is_user = models.BooleanField(default=True)
+    roles = models.ForeignKey(Role, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_created=True, auto_now=True)
     modified_at = models.DateTimeField(auto_now=True)
 
@@ -62,12 +60,13 @@ class User(AbstractBaseUser, PermissionsMixin):
                                                'Unselect this instead of deleting accounts.'
                                                ),
                                     )
-    staff = models.CharField(max_length=100)
-    is_staff = models.ForeignKey(Role, on_delete=models.CASCADE)
+    is_staff = models.BooleanField('staff status',
+                                   default=False,
+                                   help_text='Designates whether the user can log into this admin site.',
+                                   )
     date_joined = models.DateTimeField(auto_now_add=True)
     contact = models.BigIntegerField()
     contact_is_verified = models.BooleanField(default=False)
-    role = models.CharField(max_length=100)
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
