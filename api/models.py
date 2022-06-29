@@ -1,8 +1,5 @@
 from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser, PermissionsMixin, )
-
 from django.db import models
-
-
 
 
 class Role(models.Model):
@@ -77,5 +74,112 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = 'user'
         verbose_name_plural = 'users'
 
+
+class Company(models.Model):
+    name = models.CharField(max_length=255)
+    logo = models.ImageField()
+    owner = models.CharField(max_length=255)
+    subdomain = models.CharField(max_length=255)
+    created = models.DateTimeField(auto_now_add=True)
+
+
+class Menu(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    time_scheduling = models.BooleanField()
+    description = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+
+
+class Menu_category(models.Model):
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+
+#
+# class Sliders(models.Model):
+#     company = models.ForeignKey(Company, on_delete=models.CASCADE)
+#     image = models.ImageField()
+#     heading = models.CharField(max_length=100)
+#     description = models.TextField()
+#     link = models.URLField(max_length=10000)
+#     coupon = models.CharField(max_length=100)
+#     created = models.DateTimeField(auto_now_add=True)
+
+
+# class Profile(models.Model):
+#     company = models.ForeignKey(Company, on_delete=models.CASCADE)
+#     user = models.CharField(max_length=255)
+#     name = models.CharField(max_length=255)
+#     desigination = models.CharField(max_length=255)
+#     type = models.CharField(max_length=255)
+
+
+# class Guests(models.Model):
+#     company = models.ForeignKey(Company, on_delete=models.CASCADE)
+#     name = models.CharField(max_length=255)
+#     phone_number = models.BigIntegerField()
+
+
+# class Coupons(models.Model):
+#     company = models.ForeignKey(Company, on_delete=models.CASCADE)
+#     menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
+#     name = models.CharField(max_length=255)
+#     code = models.CharField(max_length=255)
+#     discount_type = models.CharField(max_length=255)
+#     discount_amt = models.CharField(max_length=100)
+#     valid_till = models.DateTimeField()
+#     max_usage = models.IntegerField()
+#     min_subtotal = models.CharField(max_length=255)
+#     sub_text = models.TextField(max_length=1000)
+#     type = models.CharField(max_length=255)
+#     is_active = models.BooleanField()
+
+
+# class Order(models.Model):
+#     company = models.ForeignKey(Company, on_delete=models.CASCADE)
+#     guest = models.ForeignKey(Guests, on_delete=models.CASCADE)
+#     coupon = models.ForeignKey(Coupons, on_delete=models.CASCADE)
+
+
+class Addon_category(models.Model):
+    name = models.CharField(max_length=255)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+
+
+class addon_items(models.Model):
+    name = models.CharField(max_length=255)
+    price = models.CharField(max_length=255)
+    addon_category = models.ForeignKey(Addon_category, on_delete=models.CASCADE)
+
+
+class Items(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    image = models.ImageField()
+    price = models.CharField(max_length=255)
+    disc_price = models.CharField(max_length=255)
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    menu_category = models.ForeignKey(Menu_category, on_delete=models.CASCADE)
+    addon_category = models.ForeignKey(Addon_category, on_delete=models.CASCADE)
+    is_veg = models.BooleanField()
+    is_recommended = models.BooleanField()
+    is_popular = models.BooleanField()
+    is_new = models.BooleanField()
+
+
+# class Order_item(models.Model):
+#     order = models.ForeignKey(Order, on_delete=models.CASCADE)
+#     item = models.ForeignKey(Items, on_delete=models.CASCADE)
+#     quantity = models.IntegerField()
+#
+#
+# class Room_service(models.Model):
+#     room = models.ForeignKey(Company, on_delete=models.CASCADE)
+#     name = models.CharField(max_length=255)
+#     company = models.CharField(max_length=255)
+#     created = models.DateTimeField(auto_now_add=True)
 
 
