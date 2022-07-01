@@ -51,85 +51,94 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 
+# role serializers
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role
         fields = '__all__'
 
 
-class CompanySerializers(serializers.ModelSerializer):
+# company serializer
+class CompanySerializer(serializers.ModelSerializer):
+    role = RoleSerializer(read_only=True)
+
     class Meta:
         model = Company
         fields = '__all__'
 
 
-class MenuSerializers(serializers.ModelSerializer):
+# addon category serializers
+class AddonCategoryGetSerializer(serializers.ModelSerializer):
+    company = CompanySerializer(read_only=True)
+
+    class Meta:
+        model = AddonCategory
+        fields = '__all__'
+
+
+class AddonCategoryEditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AddonCategory
+        fields = '__all__'
+
+
+#  addon item serializers
+class AddonItemEditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AddonItem
+        fields = '__all__'
+
+
+class AddonItemGetSerializer(serializers.ModelSerializer):
+    addonCategory = AddonCategoryGetSerializer(read_only=True)
+
+    class Meta:
+        model = AddonItem
+        fields = '__all__'
+
+
+#  menu serializers
+class MenuGetSerializer(serializers.ModelSerializer):
+    company = CompanySerializer(read_only=True)
+
     class Meta:
         model = Menu
         fields = '__all__'
 
 
-class Menu_categorySerializers(serializers.ModelSerializer):
+class MenuEditSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Menu_category
+        model = Menu
         fields = '__all__'
 
 
-# class SlidersSerializers(serializers.ModelSerializer):
-#     class Meta:
-#         model = Sliders
-#         fields = '__all__'
-
-
-# class ProfileSerializers(serializers.ModelSerializer):
-#     class Meta:
-#         model = Profile
-#         fields = '__all__'
-
-
-# class GuestsSerializers(serializers.ModelSerializer):
-#     class Meta:
-#         model = Guests
-#         fields = '__all__'
-
-
-# class CouponsSerializers(serializers.ModelSerializer):
-#     class Meta:
-#         model = Coupons
-#         fields = '__all__'
-
-
-# class OrderSerializers(serializers.ModelSerializer):
-#     class Meta:
-#         model = Order
-#         fields = '__all__'
-
-
-class Addon_categorySerializers(serializers.ModelSerializer):
+# Menu Category serializers
+class MenuCategoryGetSerializer(serializers.ModelSerializer):
+    menu = MenuGetSerializer(read_only=True)
     class Meta:
-        model = Addon_category
+        model = MenuCategory
         fields = '__all__'
 
 
-class addon_itemsSerializers(serializers.ModelSerializer):
+class MenuCategoryEditSerializer(serializers.ModelSerializer):
+
     class Meta:
-        model = addon_items
+        model = MenuCategory
         fields = '__all__'
 
 
-class ItemsSerializers(serializers.ModelSerializer):
+# item serializers
+class ItemsGetSerializer(serializers.ModelSerializer):
+    menu = MenuGetSerializer(read_only=True)
+    menu_category = MenuCategoryGetSerializer(read_only=True)
+    addon_category = AddonCategoryGetSerializer(read_only=True)
+
     class Meta:
         model = Items
         fields = '__all__'
 
 
-# class Order_itemSerializers(serializers.ModelSerializer):
-#     class Meta:
-#         model = Order_item
-#         fields = '__all__'
-
-
-# class Room_serviceSerializers(serializers.ModelSerializer):
-#     class Meta:
-#         model = Room_service
-#         fields = '__all__'
+class ItemsEditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Items
+        fields = '__all__'

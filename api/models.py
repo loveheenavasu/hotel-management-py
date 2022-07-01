@@ -76,11 +76,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Company(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, null=True, blank=True)
     logo = models.ImageField()
-    owner = models.CharField(max_length=255)
-    subdomain = models.CharField(max_length=255)
+    owner = models.CharField(max_length=255, null=True, blank=True)
+    subdomain = models.CharField(max_length=255, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
+
+    # def company_menu(self):
+    #     companyMenu = Menu.objects.get(id=self.id)
+    #     print("Santosh jii ki companu menu... ", companyMenu)
+    #     return companyMenu
 
 
 class Menu(models.Model):
@@ -91,7 +96,7 @@ class Menu(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
 
-class Menu_category(models.Model):
+class MenuCategory(models.Model):
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.TextField()
@@ -143,16 +148,16 @@ class Menu_category(models.Model):
 #     coupon = models.ForeignKey(Coupons, on_delete=models.CASCADE)
 
 
-class Addon_category(models.Model):
+class AddonCategory(models.Model):
     name = models.CharField(max_length=255)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
 
 
-class addon_items(models.Model):
+class AddonItem(models.Model):
     name = models.CharField(max_length=255)
     price = models.CharField(max_length=255)
-    addon_category = models.ForeignKey(Addon_category, on_delete=models.CASCADE)
+    addon_category = models.ForeignKey(AddonCategory, on_delete=models.CASCADE)
 
 
 class Items(models.Model):
@@ -162,8 +167,8 @@ class Items(models.Model):
     price = models.CharField(max_length=255)
     disc_price = models.CharField(max_length=255)
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
-    menu_category = models.ForeignKey(Menu_category, on_delete=models.CASCADE)
-    addon_category = models.ForeignKey(Addon_category, on_delete=models.CASCADE)
+    menu_category = models.ForeignKey(MenuCategory, on_delete=models.CASCADE)
+    addon_category = models.ForeignKey(AddonCategory, on_delete=models.CASCADE)
     is_veg = models.BooleanField()
     is_recommended = models.BooleanField()
     is_popular = models.BooleanField()

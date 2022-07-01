@@ -5,16 +5,30 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
 
-class UserViewSet(ModelViewSet):
+# token authentication
+class MyTokenObtainPairView(TokenObtainPairView):
+    permission_classes = (AllowAny,)
+    serializer_class = MyTokenObtainPairSerializer
+
+
+# assign role to user
+class AssignRole(ModelViewSet):
+    permission_classes = (AllowAny,)
+    queryset = Role.objects.all()
+    serializer_class = RoleSerializer
+
+
+class Register(ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
 @api_view(['PUT'])
-def User_update(request, id):
+def UserUpdate(request, id):
     try:
         student = User.objects.get(id=id)
     except User.DoesNotExist:
@@ -30,7 +44,7 @@ def User_update(request, id):
 
 
 @api_view(['DELETE'])
-def Userdelete(request, id):
+def UserDelete(request, id):
     try:
         student = User.objects.get(id=id)
     except User.DoesNotExist:
@@ -40,36 +54,32 @@ def Userdelete(request, id):
         return Response({"msg": "Data deleted"})
 
 
-class MyTokenObtainPairView(TokenObtainPairView):
-    permission_classes = (AllowAny,)
-    serializer_class = MyTokenObtainPairSerializer
-
-
-class RoleViewSet(ModelViewSet):
-    permission_classes = (AllowAny,)
-    queryset = Role.objects.all()
-    serializer_class = RoleSerializer
-
-
-class CompanyViewSet(ModelViewSet):
+#### company API's
+class Company(ModelViewSet):
     queryset = Company.objects.all()
-    serializer_class = CompanySerializers
+    serializer_class = CompanySerializer
 
 
-class MenuViewSet(ModelViewSet):
+#### Menu API's
+class MenuPost(ModelViewSet):
     queryset = Menu.objects.all()
-    serializer_class = MenuSerializers
+    serializer_class = MenuEditSerializer
+
+
+class MenuGet(ModelViewSet):
+    queryset = Menu.objects.all()
+    serializer_class = MenuGetSerializer
 
 
 @api_view(['PUT'])
-def Menu_update(request, id):
+def MenuPut(request, id):
     try:
         student = Menu.objects.get(id=id)
     except Menu.DoesNotExist:
         return Response("id not found")
     if request.method == "PUT":
         data = request.data
-        serial = MenuSerializers(student, data=data)
+        serial = MenuEditSerializer(student, data=data)
         if serial.is_valid():
             serial.save()
             return Response({"msg": "Data Updated"})
@@ -78,7 +88,7 @@ def Menu_update(request, id):
 
 
 @api_view(['DELETE'])
-def Menudelete(request, id):
+def MenuDelete(request, id):
     try:
         student = Menu.objects.get(id=id)
     except Menu.DoesNotExist:
@@ -87,89 +97,71 @@ def Menudelete(request, id):
         Menu.objects.get(id=id).delete()
         return Response({"msg": "Data deleted"})
 
-class Menu_categoryViewSet(ModelViewSet):
-    queryset = Menu_category.objects.all()
-    serializer_class = Menu_categorySerializers
+
+######## menu category API's
+
+class MenuCategoryPost(ModelViewSet):
+    queryset = MenuCategory.objects.all()
+    serializer_class = MenuCategoryEditSerializer
 
 
-@api_view(['PUT'])
-def Menu_Category_update(request, id):
-    try:
-        student = Menu_category.objects.get(id=id)
-    except Menu_category.DoesNotExist:
-        return Response("id not found")
-    if request.method == "PUT":
-        data = request.data
-        serial = Menu_categorySerializers(student, data=data)
-        if serial.is_valid():
-            serial.save()
-            return Response({"msg": "Data Updated"})
-        else:
-            return Response(serial.errors)
+class MenuCategoryGet(ModelViewSet):
+    queryset = MenuCategory.objects.all()
+    # print('serializer_class  model========================',queryset)
+    # print(MenuCategoryGetSerializer(queryset).data)
+    serializer_class = MenuCategoryGetSerializer
+    # print('serializer_class ========================',serializer_class)
 
 
-@api_view(['DELETE'])
-def Menu_category_delete(request, id):
-    try:
-        student = Menu_category.objects.get(id=id)
-    except Menu_category.DoesNotExist:
-        return Response("id not found")
-    if request.method == "DELETE":
-        Menu_category.objects.get(id=id).delete()
-        return Response({"msg": "Data deleted"})
-
-
-#
-# class SlidersViewSet(ModelViewSet):
-#     queryset = Sliders.objects.all()
-#     serializer_class = SlidersSerializers
-
-
-# class ProfileViewSet(ModelViewSet):
-#     queryset = Profile.objects.all()
-#     serializer_class = ProfileSerializers
+# @api_view(['PUT'])
+# def MenuCategoryPut(request, id):
+#     try:
+#         student = Menu_category.objects.get(id=id)
+#     except Menu_category.DoesNotExist:
+#         return Response("id not found")
+#     if request.method == "PUT":
+#         data = request.data
+#         serial = MenuCategoryEditSerializer(student, data=data)
+#         if serial.is_valid():
+#             serial.save()
+#             return Response({"msg": "Data Updated"})
+#         else:
+#             return Response(serial.errors)
 #
 #
-# class GuestsViewSet(ModelViewSet):
-#     queryset = Guests.objects.all()
-#     serializer_class = GuestsSerializers
+# @api_view(['DELETE'])
+# def MenuCategoryDelete(request, id):
+#     try:
+#         student = Menu_category.objects.get(id=id)
+#     except Menu_category.DoesNotExist:
+#         return Response("id not found")
+#     if request.method == "DELETE":
+#         Menu_category.objects.get(id=id).delete()
+#         return Response({"msg": "Data deleted"})
 
 
-# class CouponsViewSet(ModelViewSet):
-#     queryset = Coupons.objects.all()
-#     serializer_class = CouponsSerializers
+##
 
 
-# class OrderViewSet(ModelViewSet):
-#     queryset = Order.objects.all()
-#     serializer_class = OrderSerializers
-
-
-class Addon_categoryViewSet(ModelViewSet):
-    queryset = Addon_category.objects.all()
-    serializer_class = Addon_categorySerializers
-
-
-class addon_itemsViewSet(ModelViewSet):
-    queryset = addon_items.objects.all()
-    serializer_class = addon_itemsSerializers
-
-
-class ItemsViewSet(ModelViewSet):
+class ItemsPost(ModelViewSet):
     queryset = Items.objects.all()
-    serializer_class = ItemsSerializers
+    serializer_class = ItemsEditSerializer
 
+
+class ItemsGet(ModelViewSet):
+    queryset = Items.objects.all()
+    serializer_class = ItemsGetSerializer
 
 
 @api_view(['PUT'])
-def Menu_item_update(request, id):
+def ItemUpdate(request, id):
     try:
         student = Items.objects.get(id=id)
     except Items.DoesNotExist:
         return Response("id not found")
     if request.method == "PUT":
         data = request.data
-        serial = ItemsSerializers(student, data=data)
+        serial = ItemsGetSerializer(student, data=data)
         if serial.is_valid():
             serial.save()
             return Response({"msg": "Data Updated"})
@@ -178,7 +170,7 @@ def Menu_item_update(request, id):
 
 
 @api_view(['DELETE'])
-def Menu_item_delete(request, id):
+def ItemDelete(request, id):
     try:
         student = Items.objects.get(id=id)
     except Items.DoesNotExist:
@@ -188,11 +180,24 @@ def Menu_item_delete(request, id):
         return Response({"msg": "Data deleted"})
 
 
-# class Order_itemViewSet(ModelViewSet):
-#     queryset = Order_item.objects.all()
-#     serializer_class = Order_itemSerializers
-#
-#
-# class Room_serviceViewSet(ModelViewSet):
-#     queryset = Room_service.objects.all()
-#     serializer_class = Room_serviceSerializers
+####
+
+class AddonCategoryEdit(ModelViewSet):
+    queryset = AddonCategory.objects.all()
+    serializer_class = AddonCategoryEditSerializer
+
+
+class AddonCategoryGet(ModelViewSet):
+    queryset = AddonCategory.objects.all()
+    serializer_class = AddonCategoryGetSerializer
+
+
+# addon item views
+class addonItemsEdit(ModelViewSet):
+    queryset = AddonItem.objects.all()
+    serializer_class = AddonItemEditSerializer
+
+
+class addonItemsGet(ModelViewSet):
+    queryset = AddonItem.objects.all()
+    serializer_class = AddonItemGetSerializer
