@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 
-import  django_heroku
-import  dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +24,7 @@ SECRET_KEY = 'django-insecure-d^+ma6sso)^stxr+l4ho3fmra7bo#h309(xk)xj(@m1_4i$xta
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['qricle.com']
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -160,4 +158,3 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-django_heroku.settings(locals())
