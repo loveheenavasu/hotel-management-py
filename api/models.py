@@ -3,8 +3,8 @@ from django.db import models
 
 
 class Role(models.Model):
-    role_name = models.CharField(max_length=100)
-    permission = models.CharField(max_length=100)
+    role_name = models.CharField(max_length=200,null=True)
+    permission = models.CharField(max_length=200, null=True)
 
 
 class UserManager(BaseUserManager):
