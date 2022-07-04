@@ -62,8 +62,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                                    help_text='Designates whether the user can log into this admin site.',
                                    )
     date_joined = models.DateTimeField(auto_now_add=True)
-    # contact = models.BigIntegerField(null=True,blank=True)
-    # is_contact_verified = models.BooleanField(default=False)
+    contact = models.BigIntegerField(null=True,blank=True)
+    is_contact_verified = models.BooleanField(default=False)
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
