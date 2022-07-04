@@ -1,1 +1,1 @@
-web: gunicorn qricle.wsgi
+web: gunicorn qricle.wsgi --log-file -
