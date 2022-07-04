@@ -63,7 +63,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                                    )
     date_joined = models.DateTimeField(auto_now_add=True)
     contact = models.CharField(max_length=15)
-    contact_is_verified = models.BooleanField(default=False)
+    # contact_is_verified = models.BooleanField(default=False)
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
