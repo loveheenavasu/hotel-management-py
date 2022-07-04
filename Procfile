@@ -1,1 +1,3 @@
-web: gunicorn qricle.wsgi --log-file -
+web: gunicorn --bind 0.0.0.0:8000 qricle.wsgi
+
+
