@@ -47,7 +47,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_email_verified = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_user = models.BooleanField(default=True)
-    roles = models.ForeignKey(Role, on_delete=models.CASCADE)
+    roles = models.ForeignKey(Role, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_created=True, auto_now=True)
     modified_at = models.DateTimeField(auto_now=True)
 
@@ -62,7 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                                    help_text='Designates whether the user can log into this admin site.',
                                    )
     date_joined = models.DateTimeField(auto_now_add=True)
-    contact = models.BigIntegerField()
+    contact = models.CharField(max_length=15)
     contact_is_verified = models.BooleanField(default=False)
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
@@ -82,15 +82,11 @@ class Company(models.Model):
     subdomain = models.CharField(max_length=255, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
-    # def company_menu(self):
-    #     companyMenu = Menu.objects.get(id=self.id)
-    #     print("Santosh jii ki companu menu... ", companyMenu)
-    #     return companyMenu
-
 
 class Menu(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
+    image = models.ImageField()
     time_scheduling = models.BooleanField()
     description = models.TextField()
     created = models.DateTimeField(auto_now_add=True)

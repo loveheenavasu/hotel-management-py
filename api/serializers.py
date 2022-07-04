@@ -4,6 +4,13 @@ from .models import Company
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
+class UserSerializerGet(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+        depth = 1
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -14,7 +21,6 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
-
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     USERNAME_FIELD = 'email'
@@ -59,6 +65,7 @@ class RoleSerializer(serializers.ModelSerializer):
 
 
 # company serializer
+
 class CompanySerializer(serializers.ModelSerializer):
     role = RoleSerializer(read_only=True)
 
@@ -115,13 +122,13 @@ class MenuEditSerializer(serializers.ModelSerializer):
 # Menu Category serializers
 class MenuCategoryGetSerializer(serializers.ModelSerializer):
     menu = MenuGetSerializer(read_only=True)
+
     class Meta:
         model = MenuCategory
         fields = '__all__'
 
 
 class MenuCategoryEditSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = MenuCategory
         fields = '__all__'
@@ -142,3 +149,5 @@ class ItemsEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Items
         fields = '__all__'
+
+
