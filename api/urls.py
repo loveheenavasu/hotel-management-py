@@ -1,12 +1,16 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from django.conf import settings
+from django.conf.urls.static import static
+from rest_framework_simplejwt import views as jwt_views
+
 from .views import *
 from . import views
 router = DefaultRouter()
 
 router.register(r'role', AssignRole, basename='role'),
-router.register(r'Useredit', UserEdit, basename='Useredit'),
-router.register(r'user', UserGet, basename='UserGet'),
+router.register(r'user/edit', UserEdit, basename='register'),
+router.register(r'user', UserGet, basename='RegisterGet'),
 router.register(r'company', Company, basename='company'),
 router.register(r'menu/edit', MenuPost, basename='menu_edit'),
 router.register(r'menu', MenuGet, basename='Menu_get'),
@@ -39,6 +43,7 @@ urlpatterns = [
 
 
      # Item CURD
+
      path('menu/item/update/<int:id>/', views.ItemUpdate, name="update"),
      path('menu/item/delete/<int:id>/', views.ItemDelete, name="delete"),
 

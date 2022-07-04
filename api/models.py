@@ -62,8 +62,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                                    help_text='Designates whether the user can log into this admin site.',
                                    )
     date_joined = models.DateTimeField(auto_now_add=True)
-    contact = models.BigIntegerField(null=True,blank=True)
-    is_contact_verified = models.BooleanField(default=False,null=True,blank=True)
+    # contact = models.CharField(max_length=15)
+    # contact_is_verified = models.BooleanField(default=False)
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -86,7 +86,6 @@ class Company(models.Model):
 class Menu(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    image = models.ImageField()
     time_scheduling = models.BooleanField()
     description = models.TextField()
     created = models.DateTimeField(auto_now_add=True)

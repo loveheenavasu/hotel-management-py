@@ -76,19 +76,20 @@ WSGI_APPLICATION = 'qricle.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'qricles',
+        'NAME': 'santosh',
         'USER': 'postgres',
         'PASSWORD': 'root',
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
+AUTH_USER_MODEL = 'api.User'
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
-}
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#     ],
+# }
 
 #
 SIMPLE_JWT = {

@@ -9,7 +9,6 @@ from .permissions import IsAdmin, IsUser, IsStaff
 
 
 # Token authentication
-
 class MyTokenObtainPairView(TokenObtainPairView):
     permission_classes = (AllowAny,)
     serializer_class = MyTokenObtainPairSerializer
@@ -19,6 +18,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 class AssignRole(ModelViewSet):
     permission_classes = [IsStaff, ]
+    permission_classes = (AllowAny,)
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
 
