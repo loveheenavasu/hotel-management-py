@@ -17,7 +17,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
 # Assign role to user
 
 class AssignRole(ModelViewSet):
-    permission_classes = [IsStaff, ]
     permission_classes = (AllowAny,)
     queryset = Role.objects.all()
     serializer_class = RoleSerializer

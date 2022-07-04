@@ -8,7 +8,6 @@ class UserSerializerGet(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
-        depth = 1
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -143,6 +142,7 @@ class ItemsGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Items
         fields = '__all__'
+
 
 
 class ItemsEditSerializer(serializers.ModelSerializer):
