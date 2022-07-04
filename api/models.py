@@ -3,7 +3,7 @@ from django.db import models
 
 
 class Role(models.Model):
-    role_name = models.CharField(max_length=200,null=True)
+    role_name = models.CharField(max_length=200, null=True)
     permission = models.CharField(max_length=200, null=True)
 
 
@@ -62,8 +62,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                                    help_text='Designates whether the user can log into this admin site.',
                                    )
     date_joined = models.DateTimeField(auto_now_add=True)
-    contact = models.BigIntegerField()
-    contact_is_verified = models.BooleanField(default=False)
+    contact = models.BigIntegerField(null=True, blank=True)
+    is_contact_verified = models.BooleanField(default=False, null=True, blank=True)
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -96,6 +96,7 @@ class MenuCategory(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
+
 
 #
 # class Sliders(models.Model):
@@ -169,7 +170,6 @@ class Items(models.Model):
     is_popular = models.BooleanField()
     is_new = models.BooleanField()
 
-
 # class Order_item(models.Model):
 #     order = models.ForeignKey(Order, on_delete=models.CASCADE)
 #     item = models.ForeignKey(Items, on_delete=models.CASCADE)
@@ -181,5 +181,3 @@ class Items(models.Model):
 #     name = models.CharField(max_length=255)
 #     company = models.CharField(max_length=255)
 #     created = models.DateTimeField(auto_now_add=True)
-
-
