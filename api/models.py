@@ -86,6 +86,7 @@ class Company(models.Model):
 class Menu(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
+    image = models.ImageField()
     time_scheduling = models.BooleanField()
     description = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
