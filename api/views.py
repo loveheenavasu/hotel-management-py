@@ -26,7 +26,6 @@ class AssignRole(ModelViewSet):
 # User Register Crud
 
 class UserEdit(ModelViewSet):
-    permission_classes = [IsStaff, ]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
