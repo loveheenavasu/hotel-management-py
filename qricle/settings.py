@@ -154,7 +154,12 @@ STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
-
+import os
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'staticfiles'))
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
