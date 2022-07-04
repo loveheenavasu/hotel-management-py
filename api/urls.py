@@ -7,6 +7,8 @@ router = DefaultRouter()
 router.register(r'role', AssignRole, basename='role'),
 router.register(r'Useredit', UserEdit, basename='Useredit'),
 router.register(r'user', UserGet, basename='UserGet'),
+router.register(r'user/login/', MyTokenObtainPairView, name='token_obtain_pair'),
+
 router.register(r'company', Company, basename='company'),
 router.register(r'menu/edit', MenuPost, basename='menu_edit'),
 router.register(r'menu', MenuGet, basename='Menu_get'),
@@ -21,7 +23,6 @@ router.register(r'addon/item', addonItemsGet, basename='addon_item'),
 
 
 urlpatterns = [
-     path('user/login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
      path('', include(router.urls)),
      # path('api/token/',jwt_views.TokenObtainPairView.as_view(), name ='token_obtain_pair'),
      # path('api/token/refresh/',jwt_views.TokenRefreshView.as_view(),name ='token_refresh'),
