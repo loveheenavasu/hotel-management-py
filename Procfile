@@ -1,3 +1,4 @@
-web: gunicorn --bind 0.0.0.0:8000 qricle.wsgi
-
+release :python3 manage.py makemigrations  --no-input
+release :python3 manage.py migrate  --no-input
+web: gunicorn qricle.wsgi
 
