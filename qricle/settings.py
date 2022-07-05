@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-d^+ma6sso)^stxr+l4ho3fmra7bo#h309(xk)xj(@m1_4i$xta
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://qricle-hotel-project.herokuapp.com/','localhost','127.0.0.1']
 
 # Application definition
 
