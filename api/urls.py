@@ -8,6 +8,7 @@ from rest_framework import routers
 from .views import *
 from . import views
 router = DefaultRouter()
+
 router.register(r'role', AssignRole, basename='role'),
 router.register(r'user/edit', UserEdit, basename='register'),
 router.register(r'user', UserGet, basename='RegisterGet'),
@@ -23,10 +24,15 @@ router.register(r'addon/category/edit', AddonCategoryEdit, basename='addon_categ
 router.register(r'addon/category', AddonCategoryGet, basename='addonCategory'),
 router.register(r'addon/item/edit', addonItemsEdit, basename='addon_item_edit'),
 router.register(r'addon/item', addonItemsGet, basename='addon_item'),
+router.register(r'standard/edit', StandardEdit, basename='standard_edit'),
+router.register(r'standard/data', StandardGet, basename='standard_data'),
+router.register(r'room/edit', RooomEdit, basename='room_edit'),
+router.register(r'room', RoomGet, basename='room'),
 
 
 urlpatterns = [
      path('user/login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+     # path('user/login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
      path('', include(router.urls)),
      # path('api/token/',jwt_views.TokenObtainPairView.as_view(), name ='token_obtain_pair'),
      # path('api/token/refresh/',jwt_views.TokenRefreshView.as_view(),name ='token_refresh'),
@@ -62,7 +68,15 @@ urlpatterns = [
      path('addon_item/update/<int:id>/', views.AddonItemPut, name="update"),
      path('addon_item/delete/<int:id>/', views.AddonItemDelete, name="delete"),
      #
-     # path('user/login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+     # Standard  CRUD
+     path('standard_data/update/<int:id>/', views.StandardPut, name="update"),
+     path('standard/delete/<int:id>/', views.StandardDelete, name="delete"),
+
+     # Room  CRUD
+     path('room/update/<int:id>/', views.RoomPut, name="update"),
+     path('room/delete/<int:id>/', views.RoomDelete, name="delete"),
+
 
 ]
 # if settings.DEBUG: urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

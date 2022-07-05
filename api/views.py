@@ -374,3 +374,87 @@ class AddonItemDelete(ModelViewSet):
         if request.method == "DELETE":
             AddonItem.objects.get(id=id).delete()
             return Response({"msg": "Data deleted"})
+
+# Standard Crud
+
+class StandardEdit(ModelViewSet):
+    queryset = Standard.objects.all()
+    serializer_class = StandardEditSerializer
+
+
+class StandardGet(ModelViewSet):
+    queryset = Standard.objects.all()
+    serializer_class = StandardGetSerializer
+
+
+@api_view(['PUT'])
+class StandardPut(ModelViewSet):
+    def StandardPut(request, id):
+        try:
+            student = Standard.objects.get(id=id)
+        except Standard.DoesNotExist:
+            return Response("id not found")
+        if request.method == "PUT":
+            data = request.data
+            serial = StandardEditSerializer(student, data=data)
+            if serial.is_valid():
+                serial.save()
+                return Response({"msg": "Data Updated"})
+            else:
+                return Response(serial.errors)
+
+
+@api_view(['DELETE'])
+class StandardDelete(ModelViewSet):
+    def StandardDelete(request, id):
+        try:
+            student = Standard.objects.get(id=id)
+        except Standard.DoesNotExist:
+            return Response("id not found")
+        if request.method == "DELETE":
+            Standard.objects.get(id=id).delete()
+            return Response({"msg": "Data deleted"})
+
+# Room Crud
+
+class RooomEdit(ModelViewSet):
+    queryset = Room.objects.all()
+    serializer_class = RoomEditSerializer
+
+
+class RoomGet(ModelViewSet):
+    queryset = Room.objects.all()
+    serializer_class = RoomGetSerializer
+
+
+@api_view(['PUT'])
+class RoomPut(ModelViewSet):
+    permission_classes = [IsAdmin, ]
+
+    def RoomPut(request, id):
+        try:
+            student = Room.objects.get(id=id)
+        except Room.DoesNotExist:
+            return Response("id not found")
+        if request.method == "PUT":
+            data = request.data
+            serial = RoomEditSerializer(student, data=data)
+            if serial.is_valid():
+                serial.save()
+                return Response({"msg": "Data Updated"})
+            else:
+                return Response(serial.errors)
+
+
+@api_view(['DELETE'])
+class RoomDelete(ModelViewSet):
+    permission_classes = [IsAdmin, ]
+
+    def RoomDelete(request, id):
+        try:
+            student = Room.objects.get(id=id)
+        except Room.DoesNotExist:
+            return Response("id not found")
+        if request.method == "DELETE":
+            Room.objects.get(id=id).delete()
+            return Response({"msg": "Data deleted"})

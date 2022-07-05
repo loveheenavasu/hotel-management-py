@@ -184,3 +184,18 @@ class Items(models.Model):
 #     created = models.DateTimeField(auto_now_add=True)
 
 
+# Standard Model
+class Standard(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+
+
+# Room Model
+Room_Choies= (('room', 'Room'),
+        ('table', 'Table'))
+
+class Room(models.Model):
+    type = models.CharField(max_length=255, choices=Room_Choies)
+    room_number = models.IntegerField()
+    resident = models.ForeignKey(User, on_delete=models.CASCADE)
+    standard = models.ForeignKey(Standard, on_delete=models.CASCADE)

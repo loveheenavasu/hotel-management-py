@@ -21,6 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     USERNAME_FIELD = 'email'
 
@@ -156,3 +157,28 @@ class ItemsEditSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+# Standard serializers
+
+class StandardGetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Standard
+        fields = '__all__'
+
+
+class StandardEditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Standard
+        fields = '__all__'
+
+
+# Room serializers
+class RoomGetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = '__all__'
+
+
+class RoomEditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = '__all__'
