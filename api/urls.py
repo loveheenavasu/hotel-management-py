@@ -3,15 +3,16 @@ from rest_framework.routers import DefaultRouter
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework_simplejwt import views as jwt_views
+from rest_framework import routers
 
 from .views import *
 from . import views
 router = DefaultRouter()
-
 router.register(r'role', AssignRole, basename='role'),
 router.register(r'user/edit', UserEdit, basename='register'),
 router.register(r'user', UserGet, basename='RegisterGet'),
 router.register(r'company', Company, basename='company'),
+router.register(r'CompanyEdit', CompanyEdit, basename='CompanyEdit'),
 router.register(r'menu/edit', MenuPost, basename='menu_edit'),
 router.register(r'menu', MenuGet, basename='Menu_get'),
 router.register(r'menu/category/edit', MenuCategoryPost, basename='MenuCategoryPost'),
@@ -30,8 +31,13 @@ urlpatterns = [
      # path('api/token/',jwt_views.TokenObtainPairView.as_view(), name ='token_obtain_pair'),
      # path('api/token/refresh/',jwt_views.TokenRefreshView.as_view(),name ='token_refresh'),
      # Register CRUD
-     path('user/update/<int:id>/', views.UserUpdate, name="update"),
-     path('user/delete/<int:id>/', views.UserDelete, name="update"),
+     path('company/update/<int:id>/', views.CompanyPut, name="update"),
+     path('company/delete/<int:id>/', views.CompanyDelete, name="update"),
+
+     # Company  CRUD
+     path('MenuCategory/update/<int:id>/', views.MenyCategoryUpdate, name="update"),
+     path('MenuCategory/delete/<int:id>/', views.MenuCategoryDelete, name="delete"),
+
 
      # Menu CRUD
      path('menu/update/<int:id>/', views.MenuPut, name="update"),
@@ -40,6 +46,7 @@ urlpatterns = [
      # Menu Category CRUD
      path('MenuCategory/update/<int:id>/', views.MenyCategoryUpdate, name="update"),
      path('MenuCategory/delete/<int:id>/', views.MenuCategoryDelete, name="delete"),
+
 
 
      # Item CURD

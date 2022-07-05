@@ -36,7 +36,6 @@ class UserGet(ModelViewSet):
 
 @api_view(['PUT'])
 class UserUpdate(ModelViewSet):
-    permission_classes = [IsStaff, ]
 
     def UserUpdate(request,id):
         try:
@@ -55,7 +54,6 @@ class UserUpdate(ModelViewSet):
 
 @api_view(['DELETE'])
 class UserDelete(ModelViewSet):
-    permission_classes = [IsStaff, ]
 
     def UserDelete(request, id):
         try:
@@ -69,28 +67,69 @@ class UserDelete(ModelViewSet):
 
 # Company View
 
+class CompanyEdit(ModelViewSet):
+    permission_classes = [IsAdmin, ]
+    queryset = Company.objects.all()
+    serializer_class = CompanyEditSerializer
+
+
 class Company(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
 
 
+
+
+@api_view(['PUT'])
+class CompanyPut(ModelViewSet):
+    permission_classes = [IsAdmin, ]
+
+    def CompanyPut(request, id):
+        try:
+            student = Company.objects.get(id=id)
+        except Company.DoesNotExist:
+            return Response("id not found")
+        if request.method == "PUT":
+            data = request.data
+            serial = CompanyEdit(student, data=data)
+            if serial.is_valid():
+                serial.save()
+                return Response({"msg": "Data Updated"})
+            else:
+                return Response(serial.errors)
+
+
+@api_view(['DELETE'])
+class CompanyDelete(ModelViewSet):
+    permission_classes = [IsAdmin, ]
+
+    def CompanyDelete(request, id):
+        try:
+            student = Company.objects.get(id=id)
+        except Company.DoesNotExist:
+            return Response("id not found")
+        if request.method == "DELETE":
+            Company.objects.get(id=id).delete()
+            return Response({"msg": "Data deleted"})
+
+
 # Menu Crud
 class MenuPost(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = Menu.objects.all()
     serializer_class = MenuEditSerializer
 
 
 class MenuGet(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = Menu.objects.all()
     serializer_class = MenuGetSerializer
 
 
 @api_view(['PUT'])
 class MenuPut(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
 
     def MenuPut(request, id):
         try:
@@ -109,7 +148,7 @@ class MenuPut(ModelViewSet):
 
 @api_view(['DELETE'])
 class MenuDelete(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
 
     def MenuDelete(request, id):
         try:
@@ -124,20 +163,20 @@ class MenuDelete(ModelViewSet):
 # Menu category Curd
 
 class MenuCategoryPost(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = MenuCategory.objects.all()
     serializer_class = MenuCategoryEditSerializer
 
 
 class MenuCategoryGet(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = MenuCategory.objects.all()
     serializer_class = MenuCategoryGetSerializer
 
 
 @api_view(['PUT'])
 class MenyCategoryUpdate(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
 
     def MenyCategoryUpdate(request, id):
         try:
@@ -156,7 +195,7 @@ class MenyCategoryUpdate(ModelViewSet):
 
 @api_view(['DELETE'])
 class MenuCategoryDelete(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
 
     def MenuCategoryDelete(request, id):
         try:
@@ -198,20 +237,20 @@ class MenuCategoryDelete(ModelViewSet):
 # Menu Item CRUD
 
 class ItemsPost(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = Items.objects.all()
     serializer_class = ItemsEditSerializer
 
 
 class ItemsGet(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = Items.objects.all()
     serializer_class = ItemsGetSerializer
 
 
 @api_view(['PUT'])
 class ItemUpdate(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
 
     def ItemUpdate(request, id):
         try:
@@ -230,7 +269,7 @@ class ItemUpdate(ModelViewSet):
 
 @api_view(['DELETE'])
 class ItemDelete(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
 
     def ItemDelete(request, id):
         try:
@@ -247,20 +286,20 @@ class ItemDelete(ModelViewSet):
 # Addon Category crud
 
 class AddonCategoryEdit(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = AddonCategory.objects.all()
     serializer_class = AddonCategoryEditSerializer
 
 
 class AddonCategoryGet(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = AddonCategory.objects.all()
     serializer_class = AddonCategoryGetSerializer
 
 
 @api_view(['PUT'])
 class AddonCategoryPut(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
 
     def AddonCategoryPut(request, id):
         try:
@@ -279,7 +318,7 @@ class AddonCategoryPut(ModelViewSet):
 
 @api_view(['DELETE'])
 class AddonCategorytemDelete(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
 
     def AddonCategorytemDelete(request, id):
         try:
@@ -293,20 +332,20 @@ class AddonCategorytemDelete(ModelViewSet):
 
 # addon item views CURD
 class addonItemsEdit(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = AddonItem.objects.all()
     serializer_class = AddonItemEditSerializer
 
 
 class addonItemsGet(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = AddonItem.objects.all()
     serializer_class = AddonItemGetSerializer
 
 
 @api_view(['PUT'])
 class AddonItemPut(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
 
     def AddonItemPut(request, id):
         try:
@@ -325,7 +364,7 @@ class AddonItemPut(ModelViewSet):
 
 @api_view(['DELETE'])
 class AddonItemDelete(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
 
     def AddonItemDelete(request, id):
         try:
