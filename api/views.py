@@ -35,34 +35,31 @@ class UserGet(ModelViewSet):
 
 
 @api_view(['PUT'])
-class UserUpdate(ModelViewSet):
 
-    def UserUpdate(request,id):
-        try:
-            student = User.objects.get(id=id)
-        except User.DoesNotExist:
-            return Response("id not found")
-        if request.method == "PUT":
-            data = request.data
-            serial = UserSerializer(student, data=data)
-            if serial.is_valid():
-                serial.save()
-                return Response({"msg": "Data Updated"})
-            else:
-                return Response(serial.errors)
+def UserUpdate(request,id):
+    try:
+        student = User.objects.get(id=id)
+    except User.DoesNotExist:
+        return Response("id not found")
+    if request.method == "PUT":
+        data = request.data
+        serial = UserSerializer(student, data=data)
+        if serial.is_valid():
+            serial.save()
+            return Response({"msg": "Data Updated"})
+        else:
+            return Response(serial.errors)
 
 
 @api_view(['DELETE'])
-class UserDelete(ModelViewSet):
-
-    def UserDelete(request, id):
-        try:
-            student = User.objects.get(id=id)
-        except User.DoesNotExist:
-            return Response("id not found")
-        if request.method == "DELETE":
-            User.objects.get(id=id).delete()
-            return Response({"msg": "Data deleted"})
+def UserDelete(request, id):
+    try:
+        student = User.objects.get(id=id)
+    except User.DoesNotExist:
+        return Response("id not found")
+    if request.method == "DELETE":
+        User.objects.get(id=id).delete()
+        return Response({"msg": "Data deleted"})
 
 
 # Company View
@@ -82,36 +79,34 @@ class Company(ModelViewSet):
 
 
 @api_view(['PUT'])
-class CompanyPut(ModelViewSet):
-    permission_classes = [IsAdmin, ]
 
-    def CompanyPut(request, id):
-        try:
-            student = Company.objects.get(id=id)
-        except Company.DoesNotExist:
-            return Response("id not found")
-        if request.method == "PUT":
-            data = request.data
-            serial = CompanyEdit(student, data=data)
-            if serial.is_valid():
-                serial.save()
-                return Response({"msg": "Data Updated"})
-            else:
-                return Response(serial.errors)
+
+def CompanyPut(request, id):
+    try:
+        student = Company.objects.get(id=id)
+    except Company.DoesNotExist:
+        return Response("id not found")
+    if request.method == "PUT":
+        data = request.data
+        serial = CompanyEdit(student, data=data)
+        if serial.is_valid():
+            serial.save()
+            return Response({"msg": "Data Updated"})
+        else:
+            return Response(serial.errors)
 
 
 @api_view(['DELETE'])
-class CompanyDelete(ModelViewSet):
-    permission_classes = [IsAdmin, ]
 
-    def CompanyDelete(request, id):
-        try:
-            student = Company.objects.get(id=id)
-        except Company.DoesNotExist:
-            return Response("id not found")
-        if request.method == "DELETE":
-            Company.objects.get(id=id).delete()
-            return Response({"msg": "Data deleted"})
+
+def CompanyDelete(request, id):
+    try:
+        student = Company.objects.get(id=id)
+    except Company.DoesNotExist:
+        return Response("id not found")
+    if request.method == "DELETE":
+        Company.objects.get(id=id).delete()
+        return Response({"msg": "Data deleted"})
 
 
 # Menu Crud
@@ -128,36 +123,33 @@ class MenuGet(ModelViewSet):
 
 
 @api_view(['PUT'])
-class MenuPut(ModelViewSet):
-    permission_classes = [IsAdmin, ]
 
-    def MenuPut(request, id):
-        try:
-            student = Menu.objects.get(id=id)
-        except Menu.DoesNotExist:
-            return Response("id not found")
-        if request.method == "PUT":
-            data = request.data
-            serial = MenuEditSerializer(student, data=data)
-            if serial.is_valid():
-                serial.save()
-                return Response({"msg": "Data Updated"})
-            else:
-                return Response(serial.errors)
+def MenuPut(request, id):
+    try:
+        student = Menu.objects.get(id=id)
+    except Menu.DoesNotExist:
+        return Response("id not found")
+    if request.method == "PUT":
+        data = request.data
+        serial = MenuEditSerializer(student, data=data)
+        if serial.is_valid():
+            serial.save()
+            return Response({"msg": "Data Updated"})
+        else:
+            return Response(serial.errors)
 
 
 @api_view(['DELETE'])
-class MenuDelete(ModelViewSet):
-    permission_classes = [IsAdmin, ]
 
-    def MenuDelete(request, id):
-        try:
-            student = Menu.objects.get(id=id)
-        except Menu.DoesNotExist:
-            return Response("id not found")
-        if request.method == "DELETE":
-            Menu.objects.get(id=id).delete()
-            return Response({"msg": "Data deleted"})
+
+def MenuDelete(request, id):
+    try:
+        student = Menu.objects.get(id=id)
+    except Menu.DoesNotExist:
+        return Response("id not found")
+    if request.method == "DELETE":
+        Menu.objects.get(id=id).delete()
+        return Response({"msg": "Data deleted"})
 
 
 # Menu category Curd
@@ -175,36 +167,34 @@ class MenuCategoryGet(ModelViewSet):
 
 
 @api_view(['PUT'])
-class MenyCategoryUpdate(ModelViewSet):
-    permission_classes = [IsAdmin, ]
 
-    def MenyCategoryUpdate(request, id):
-        try:
-            student = MenuCategory.objects.get(id=id)
-        except MenuCategory.DoesNotExist:
-            return Response("id not found")
-        if request.method == "PUT":
-            data = request.data
-            serial = MenuCategoryEditSerializer(student, data=data)
-            if serial.is_valid():
-                serial.save()
-                return Response({"msg": "Data Updated"})
-            else:
-                return Response(serial.errors)
+
+def MenyCategoryUpdate(request, id):
+    try:
+        student = MenuCategory.objects.get(id=id)
+    except MenuCategory.DoesNotExist:
+        return Response("id not found")
+    if request.method == "PUT":
+        data = request.data
+        serial = MenuCategoryEditSerializer(student, data=data)
+        if serial.is_valid():
+            serial.save()
+            return Response({"msg": "Data Updated"})
+        else:
+            return Response(serial.errors)
 
 
 @api_view(['DELETE'])
-class MenuCategoryDelete(ModelViewSet):
-    permission_classes = [IsAdmin, ]
 
-    def MenuCategoryDelete(request, id):
-        try:
-            student = MenuCategory.objects.get(id=id)
-        except MenuCategory.DoesNotExist:
-            return Response("id not found")
-        if request.method == "DELETE":
-            MenuCategory.objects.get(id=id).delete()
-            return Response({"msg": "Data deleted"})
+
+def MenuCategoryDelete(request, id):
+    try:
+        student = MenuCategory.objects.get(id=id)
+    except MenuCategory.DoesNotExist:
+        return Response("id not found")
+    if request.method == "DELETE":
+        MenuCategory.objects.get(id=id).delete()
+        return Response({"msg": "Data deleted"})
 
 
 # @api_view(['PUT'])
@@ -249,36 +239,31 @@ class ItemsGet(ModelViewSet):
 
 
 @api_view(['PUT'])
-class ItemUpdate(ModelViewSet):
-    permission_classes = [IsAdmin, ]
 
-    def ItemUpdate(request, id):
-        try:
-            student = Items.objects.get(id=id)
-        except Items.DoesNotExist:
-            return Response("id not found")
-        if request.method == "PUT":
-            data = request.data
-            serial = ItemsGetSerializer(student, data=data)
-            if serial.is_valid():
-                serial.save()
-                return Response({"msg": "Data Updated"})
-            else:
-                return Response(serial.errors)
+def ItemUpdate(request, id):
+    try:
+        student = Items.objects.get(id=id)
+    except Items.DoesNotExist:
+        return Response("id not found")
+    if request.method == "PUT":
+        data = request.data
+        serial = ItemsGetSerializer(student, data=data)
+        if serial.is_valid():
+            serial.save()
+            return Response({"msg": "Data Updated"})
+        else:
+            return Response(serial.errors)
 
 
 @api_view(['DELETE'])
-class ItemDelete(ModelViewSet):
-    permission_classes = [IsAdmin, ]
-
-    def ItemDelete(request, id):
-        try:
-            student = Items.objects.get(id=id)
-        except Items.DoesNotExist:
-            return Response("id not found")
-        if request.method == "DELETE":
-            Items.objects.get(id=id).delete()
-            return Response({"msg": "Data deleted"})
+def ItemDelete(request, id):
+    try:
+        student = Items.objects.get(id=id)
+    except Items.DoesNotExist:
+        return Response("id not found")
+    if request.method == "DELETE":
+        Items.objects.get(id=id).delete()
+        return Response({"msg": "Data deleted"})
 
 
 ####
@@ -298,36 +283,31 @@ class AddonCategoryGet(ModelViewSet):
 
 
 @api_view(['PUT'])
-class AddonCategoryPut(ModelViewSet):
-    permission_classes = [IsAdmin, ]
-
-    def AddonCategoryPut(request, id):
-        try:
-            student = AddonCategory.objects.get(id=id)
-        except AddonCategory.DoesNotExist:
-            return Response("id not found")
-        if request.method == "PUT":
-            data = request.data
-            serial = AddonCategoryEditSerializer(student, data=data)
-            if serial.is_valid():
-                serial.save()
-                return Response({"msg": "Data Updated"})
-            else:
-                return Response(serial.errors)
+def AddonCategoryPut(request, id):
+    try:
+        student = AddonCategory.objects.get(id=id)
+    except AddonCategory.DoesNotExist:
+        return Response("id not found")
+    if request.method == "PUT":
+        data = request.data
+        serial = AddonCategoryEditSerializer(student, data=data)
+        if serial.is_valid():
+            serial.save()
+            return Response({"msg": "Data Updated"})
+        else:
+            return Response(serial.errors)
 
 
 @api_view(['DELETE'])
-class AddonCategorytemDelete(ModelViewSet):
-    permission_classes = [IsAdmin, ]
 
-    def AddonCategorytemDelete(request, id):
-        try:
-            student = AddonCategory.objects.get(id=id)
-        except AddonCategory.DoesNotExist:
-            return Response("id not found")
-        if request.method == "DELETE":
-            AddonCategory.objects.get(id=id).delete()
-            return Response({"msg": "Data deleted"})
+def AddonCategorytemDelete(request, id):
+    try:
+        student = AddonCategory.objects.get(id=id)
+    except AddonCategory.DoesNotExist:
+        return Response("id not found")
+    if request.method == "DELETE":
+        AddonCategory.objects.get(id=id).delete()
+        return Response({"msg": "Data deleted"})
 
 
 # addon item views CURD
@@ -344,117 +324,109 @@ class addonItemsGet(ModelViewSet):
 
 
 @api_view(['PUT'])
-class AddonItemPut(ModelViewSet):
-    permission_classes = [IsAdmin, ]
 
-    def AddonItemPut(request, id):
-        try:
-            student = AddonItem.objects.get(id=id)
-        except AddonItem.DoesNotExist:
-            return Response("id not found")
-        if request.method == "PUT":
-            data = request.data
-            serial = AddonItemEditSerializer(student, data=data)
-            if serial.is_valid():
-                serial.save()
-                return Response({"msg": "Data Updated"})
-            else:
-                return Response(serial.errors)
+def AddonItemPut(request, id):
+    try:
+        student = AddonItem.objects.get(id=id)
+    except AddonItem.DoesNotExist:
+        return Response("id not found")
+    if request.method == "PUT":
+        data = request.data
+        serial = AddonItemEditSerializer(student, data=data)
+        if serial.is_valid():
+            serial.save()
+            return Response({"msg": "Data Updated"})
+        else:
+            return Response(serial.errors)
 
 
 @api_view(['DELETE'])
-class AddonItemDelete(ModelViewSet):
-    permission_classes = [IsAdmin, ]
 
-    def AddonItemDelete(request, id):
-        try:
-            student = AddonItem.objects.get(id=id)
-        except AddonItem.DoesNotExist:
-            return Response("id not found")
-        if request.method == "DELETE":
-            AddonItem.objects.get(id=id).delete()
-            return Response({"msg": "Data deleted"})
+
+def AddonItemDelete(request, id):
+    try:
+        student = AddonItem.objects.get(id=id)
+    except AddonItem.DoesNotExist:
+        return Response("id not found")
+    if request.method == "DELETE":
+        AddonItem.objects.get(id=id).delete()
+        return Response({"msg": "Data deleted"})
 
 # Standard Crud
 
 class StandardEdit(ModelViewSet):
+    permission_classes = [IsAdmin, ]
     queryset = Standard.objects.all()
     serializer_class = StandardEditSerializer
 
 
 class StandardGet(ModelViewSet):
+    permission_classes = [IsAdmin, ]
     queryset = Standard.objects.all()
     serializer_class = StandardGetSerializer
 
 
 @api_view(['PUT'])
-class StandardPut(ModelViewSet):
-    def StandardPut(request, id):
-        try:
-            student = Standard.objects.get(id=id)
-        except Standard.DoesNotExist:
-            return Response("id not found")
-        if request.method == "PUT":
-            data = request.data
-            serial = StandardEditSerializer(student, data=data)
-            if serial.is_valid():
-                serial.save()
-                return Response({"msg": "Data Updated"})
-            else:
-                return Response(serial.errors)
+def StandardPut(request, id):
+    try:
+        student = Standard.objects.get(id=id)
+    except Standard.DoesNotExist:
+        return Response("id not found")
+    if request.method == "PUT":
+        data = request.data
+        serial = StandardEditSerializer(student, data=data)
+        if serial.is_valid():
+            serial.save()
+            return Response({"msg": "Data Updated"})
+        else:
+            return Response(serial.errors)
 
 
 @api_view(['DELETE'])
-class StandardDelete(ModelViewSet):
-    def StandardDelete(request, id):
-        try:
-            student = Standard.objects.get(id=id)
-        except Standard.DoesNotExist:
-            return Response("id not found")
-        if request.method == "DELETE":
-            Standard.objects.get(id=id).delete()
-            return Response({"msg": "Data deleted"})
+def StandardDelete(request, id):
+    try:
+        student = Standard.objects.get(id=id)
+    except Standard.DoesNotExist:
+        return Response("id not found")
+    if request.method == "DELETE":
+        Standard.objects.get(id=id).delete()
+        return Response({"msg": "Data deleted"})
 
 # Room Crud
 
 class RooomEdit(ModelViewSet):
+    permission_classes = [IsAdmin, ]
     queryset = Room.objects.all()
     serializer_class = RoomEditSerializer
 
 
 class RoomGet(ModelViewSet):
+    permission_classes = [IsAdmin, ]
     queryset = Room.objects.all()
     serializer_class = RoomGetSerializer
 
-
 @api_view(['PUT'])
-class RoomPut(ModelViewSet):
-    permission_classes = [IsAdmin, ]
-
-    def RoomPut(request, id):
-        try:
-            student = Room.objects.get(id=id)
-        except Room.DoesNotExist:
-            return Response("id not found")
-        if request.method == "PUT":
-            data = request.data
-            serial = RoomEditSerializer(student, data=data)
-            if serial.is_valid():
-                serial.save()
-                return Response({"msg": "Data Updated"})
-            else:
-                return Response(serial.errors)
+def RoomPut(request, id):
+    try:
+        student = Room.objects.get(id=id)
+    except Room.DoesNotExist:
+        return Response("id not found")
+    if request.method == "PUT":
+        data = request.data
+        serial = RoomEditSerializer(student, data=data)
+        if serial.is_valid():
+            serial.save()
+            return Response({"msg": "Data Updated"})
+        else:
+            return Response(serial.errors)
 
 
 @api_view(['DELETE'])
-class RoomDelete(ModelViewSet):
-    permission_classes = [IsAdmin, ]
-
-    def RoomDelete(request, id):
-        try:
-            student = Room.objects.get(id=id)
-        except Room.DoesNotExist:
-            return Response("id not found")
-        if request.method == "DELETE":
-            Room.objects.get(id=id).delete()
-            return Response({"msg": "Data deleted"})
+def RoomDelete(request,id):
+    try:
+        student = Room.objects.get(id=id)
+    except Room.DoesNotExist:
+        return Response("id not found")
+    if request.method == "DELETE":
+        Room.objects.get(id=id).delete()
+        return Response({"msg": "Data deleted"})

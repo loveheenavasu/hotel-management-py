@@ -191,11 +191,11 @@ class Standard(models.Model):
 
 
 # Room Model
-Room_Choies= (('room', 'Room'),
-        ('table', 'Table'))
+Room_Choices = (('room', 'Room'), ('table', 'Table'))
+
 
 class Room(models.Model):
-    type = models.CharField(max_length=255, choices=Room_Choies)
     room_number = models.IntegerField()
+    type = models.CharField(max_length=255, choices=Room_Choices)
     resident = models.ForeignKey(User, on_delete=models.CASCADE)
     standard = models.ForeignKey(Standard, on_delete=models.CASCADE)
