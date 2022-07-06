@@ -1,16 +1,14 @@
 from django.urls import path, include
-# from rest_framework.routers import DefaultRouter
-from rest_framework import routers
+from rest_framework.routers import DefaultRouter
+
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework_simplejwt import views as jwt_views
+from rest_framework import routers
 
 from .views import *
 from . import views
-
-from rest_framework import routers
-
-router = routers.SimpleRouter()
+router = DefaultRouter()
 
 router.register(r'role', AssignRole, basename='role'),
 router.register(r'user/edit', UserEdit, basename='register'),
@@ -36,7 +34,7 @@ router.register(r'room', RoomGet, basename='room'),
 urlpatterns = [
      path('user/login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
      # path('user/login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-     # path('', include('router.urls')),
+     path('', include(router.urls)),
      # path('api/token/',jwt_views.TokenObtainPairView.as_view(), name ='token_obtain_pair'),
      # path('api/token/refresh/',jwt_views.TokenRefreshView.as_view(),name ='token_refresh'),
      # Register CRUD
