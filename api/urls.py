@@ -1,13 +1,16 @@
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+# from rest_framework.routers import DefaultRouter
+from rest_framework import routers
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework_simplejwt import views as jwt_views
-from rest_framework import routers
 
 from .views import *
 from . import views
-router = DefaultRouter()
+
+from rest_framework import routers
+
+router = routers.SimpleRouter()
 
 router.register(r'role', AssignRole, basename='role'),
 router.register(r'user/edit', UserEdit, basename='register'),

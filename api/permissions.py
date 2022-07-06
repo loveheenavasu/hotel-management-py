@@ -1,17 +1,9 @@
-
 from rest_framework.permissions import BasePermission
-from .serializers import UserSerializerGet
-from .models import User
+
 class IsSuperUser(BasePermission):
     def has_permission(self, request, view):
         return bool(request.user and request.user.is_superuser)
 
-# #
-# class IsAdmin(BasePermission):
-#     def has_permission(self, request, view):
-#         user_data = User.objects.get(user=request.user)
-#         print(user_data)
-#         return bool(request.user and request.user.is_superuser)
 
 
 class IsStaff(BasePermission):
