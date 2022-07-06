@@ -15,7 +15,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 
 # Assign role to user
-
 class AssignRole(ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = Role.objects.all()
@@ -23,7 +22,6 @@ class AssignRole(ModelViewSet):
 
 
 # User Register Crud
-
 class UserEdit(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -35,8 +33,7 @@ class UserGet(ModelViewSet):
 
 
 @api_view(['PUT'])
-
-def UserUpdate(request,id):
+def user_update(request, id):
     try:
         student = User.objects.get(id=id)
     except User.DoesNotExist:
@@ -52,18 +49,17 @@ def UserUpdate(request,id):
 
 
 @api_view(['DELETE'])
-def UserDelete(request, id):
+def user_delete(request, id):
     try:
         student = User.objects.get(id=id)
-    except User.DoesNotExist:
-        return Response("id not found")
+    except User.DoesNotExist as err:
+        return Response("id not found", err)
     if request.method == "DELETE":
         User.objects.get(id=id).delete()
         return Response({"msg": "Data deleted"})
 
 
 # Company View
-
 class CompanyEdit(ModelViewSet):
     permission_classes = [IsStaff, ]
     queryset = Company.objects.all()
@@ -76,12 +72,8 @@ class Company(ModelViewSet):
     serializer_class = CompanySerializer
 
 
-
-
 @api_view(['PUT'])
-
-
-def CompanyPut(request, id):
+def company_put(request, id):
     try:
         student = Company.objects.get(id=id)
     except Company.DoesNotExist:
@@ -97,9 +89,7 @@ def CompanyPut(request, id):
 
 
 @api_view(['DELETE'])
-
-
-def CompanyDelete(request, id):
+def company_delete(request, id):
     try:
         student = Company.objects.get(id=id)
     except Company.DoesNotExist:
@@ -123,8 +113,7 @@ class MenuGet(ModelViewSet):
 
 
 @api_view(['PUT'])
-
-def MenuPut(request, id):
+def menu_put(request, id):
     try:
         student = Menu.objects.get(id=id)
     except Menu.DoesNotExist:
@@ -140,9 +129,7 @@ def MenuPut(request, id):
 
 
 @api_view(['DELETE'])
-
-
-def MenuDelete(request, id):
+def menu_delete(request, id):
     try:
         student = Menu.objects.get(id=id)
     except Menu.DoesNotExist:
@@ -153,7 +140,6 @@ def MenuDelete(request, id):
 
 
 # Menu category Curd
-
 class MenuCategoryPost(ModelViewSet):
     permission_classes = [IsStaff, ]
     queryset = MenuCategory.objects.all()
@@ -167,9 +153,7 @@ class MenuCategoryGet(ModelViewSet):
 
 
 @api_view(['PUT'])
-
-
-def MenyCategoryUpdate(request, id):
+def meny_category_update(request, id):
     try:
         student = MenuCategory.objects.get(id=id)
     except MenuCategory.DoesNotExist:
@@ -185,9 +169,7 @@ def MenyCategoryUpdate(request, id):
 
 
 @api_view(['DELETE'])
-
-
-def MenuCategoryDelete(request, id):
+def menu_category_delete(request, id):
     try:
         student = MenuCategory.objects.get(id=id)
     except MenuCategory.DoesNotExist:
@@ -225,7 +207,6 @@ def MenuCategoryDelete(request, id):
 
 
 # Menu Item CRUD
-
 class ItemsPost(ModelViewSet):
     permission_classes = [IsStaff, ]
     queryset = Items.objects.all()
@@ -239,8 +220,7 @@ class ItemsGet(ModelViewSet):
 
 
 @api_view(['PUT'])
-
-def ItemUpdate(request, id):
+def item_update(request, id):
     try:
         student = Items.objects.get(id=id)
     except Items.DoesNotExist:
@@ -256,7 +236,7 @@ def ItemUpdate(request, id):
 
 
 @api_view(['DELETE'])
-def ItemDelete(request, id):
+def item_delete(request, id):
     try:
         student = Items.objects.get(id=id)
     except Items.DoesNotExist:
@@ -267,9 +247,7 @@ def ItemDelete(request, id):
 
 
 ####
-
 # Addon Category crud
-
 class AddonCategoryEdit(ModelViewSet):
     permission_classes = [IsStaff, ]
     queryset = AddonCategory.objects.all()
@@ -283,7 +261,7 @@ class AddonCategoryGet(ModelViewSet):
 
 
 @api_view(['PUT'])
-def AddonCategoryPut(request, id):
+def addon_category_put(request, id):
     try:
         student = AddonCategory.objects.get(id=id)
     except AddonCategory.DoesNotExist:
@@ -299,8 +277,7 @@ def AddonCategoryPut(request, id):
 
 
 @api_view(['DELETE'])
-
-def AddonCategorytemDelete(request, id):
+def addon_category_item_delete(request, id):
     try:
         student = AddonCategory.objects.get(id=id)
     except AddonCategory.DoesNotExist:
@@ -311,21 +288,20 @@ def AddonCategorytemDelete(request, id):
 
 
 # addon item views CURD
-class addonItemsEdit(ModelViewSet):
+class AddonItemsEdit(ModelViewSet):
     permission_classes = [IsStaff, ]
     queryset = AddonItem.objects.all()
     serializer_class = AddonItemEditSerializer
 
 
-class addonItemsGet(ModelViewSet):
+class AddonItemsGet(ModelViewSet):
     permission_classes = [IsStaff, ]
     queryset = AddonItem.objects.all()
     serializer_class = AddonItemGetSerializer
 
 
 @api_view(['PUT'])
-
-def AddonItemPut(request, id):
+def addon_item_put(request, id):
     try:
         student = AddonItem.objects.get(id=id)
     except AddonItem.DoesNotExist:
@@ -341,9 +317,7 @@ def AddonItemPut(request, id):
 
 
 @api_view(['DELETE'])
-
-
-def AddonItemDelete(request, id):
+def addon_item_delete(request, id):
     try:
         student = AddonItem.objects.get(id=id)
     except AddonItem.DoesNotExist:
@@ -351,6 +325,7 @@ def AddonItemDelete(request, id):
     if request.method == "DELETE":
         AddonItem.objects.get(id=id).delete()
         return Response({"msg": "Data deleted"})
+
 
 # Standard Crud
 class StandardEdit(ModelViewSet):
@@ -367,7 +342,7 @@ class StandardGet(ModelViewSet):
 
 
 @api_view(['PUT'])
-def StandardPut(request, id):
+def standard_put(request, id):
     try:
         student = Standard.objects.get(id=id)
     except Standard.DoesNotExist:
@@ -383,7 +358,7 @@ def StandardPut(request, id):
 
 
 @api_view(['DELETE'])
-def StandardDelete(request, id):
+def standard_delete(request, id):
     try:
         student = Standard.objects.get(id=id)
     except Standard.DoesNotExist:
@@ -392,9 +367,9 @@ def StandardDelete(request, id):
         Standard.objects.get(id=id).delete()
         return Response({"msg": "Data deleted"})
 
-# Room Crud
 
-class RooomEdit(ModelViewSet):
+# Room Crud
+class RoomEdit(ModelViewSet):
     permission_classes = [IsStaff, ]
     queryset = Room.objects.all()
     serializer_class = RoomEditSerializer
@@ -405,8 +380,9 @@ class RoomGet(ModelViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomGetSerializer
 
+
 @api_view(['PUT'])
-def RoomPut(request, id):
+def room_put(request, id):
     try:
         student = Room.objects.get(id=id)
     except Room.DoesNotExist:
@@ -422,7 +398,7 @@ def RoomPut(request, id):
 
 
 @api_view(['DELETE'])
-def RoomDelete(request,id):
+def room_delete(request, id):
     try:
         student = Room.objects.get(id=id)
     except Room.DoesNotExist:

@@ -11,6 +11,7 @@ class UserSerializerGet(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """user serializer"""
     class Meta:
         model = User
         fields = '__all__'
@@ -94,7 +95,7 @@ class AddonCategoryEditSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-#  addon item serializers
+# addon item serializers
 class AddonItemEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = AddonItem
@@ -109,7 +110,7 @@ class AddonItemGetSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-#  menu serializers
+# menu serializers
 class MenuGetSerializer(serializers.ModelSerializer):
     company = CompanySerializer(read_only=True)
 
@@ -150,7 +151,6 @@ class ItemsGetSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
 class ItemsEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Items
@@ -158,7 +158,6 @@ class ItemsEditSerializer(serializers.ModelSerializer):
 
 
 # Standard serializers
-
 class StandardGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Standard

@@ -23,11 +23,11 @@ router.register(r'item/edit',  ItemsPost, basename='menu_item'),
 router.register(r'items', ItemsGet, basename='menu_item_get'),
 router.register(r'addon/category/edit', AddonCategoryEdit, basename='addon_category'),
 router.register(r'addon/category', AddonCategoryGet, basename='addonCategory'),
-router.register(r'addon/item/edit', addonItemsEdit, basename='addon_item_edit'),
-router.register(r'addon/item', addonItemsGet, basename='addon_item'),
+router.register(r'addon/item/edit', AddonItemsEdit, basename='addon_item_edit'),
+router.register(r'addon/item', AddonItemsGet, basename='addon_item'),
 router.register(r'standard/edit', StandardEdit, basename='standard_edit'),
 router.register(r'standard/data', StandardGet, basename='standard_data'),
-router.register(r'room/edit', RooomEdit, basename='room_edit'),
+router.register(r'room/edit', RoomEdit, basename='room_edit'),
 router.register(r'room', RoomGet, basename='room'),
 
 
@@ -38,45 +38,45 @@ urlpatterns = [
      # path('api/token/',jwt_views.TokenObtainPairView.as_view(), name ='token_obtain_pair'),
      # path('api/token/refresh/',jwt_views.TokenRefreshView.as_view(),name ='token_refresh'),
      # Register CRUD
-     path('company/update/<int:id>/', views.CompanyPut, name="update"),
-     path('company/delete/<int:id>/', views.CompanyDelete, name="update"),
+     path('company/update/<int:id>/', views.company_put, name="update"),
+     path('company/delete/<int:id>/', views.company_delete, name="update"),
 
      # Company  CRUD
-     path('MenuCategory/update/<int:id>/', views.MenyCategoryUpdate, name="update"),
-     path('MenuCategory/delete/<int:id>/', views.MenuCategoryDelete, name="delete"),
+     path('MenuCategory/update/<int:id>/', views.meny_category_update, name="update"),
+     path('MenuCategory/delete/<int:id>/', views.menu_category_delete, name="delete"),
 
 
      # Menu CRUD
-     path('menu/update/<int:id>/', views.MenuPut, name="update"),
-     path('menu/delete/<int:id>/', views.MenuDelete, name="delete"),
+     path('menu/update/<int:id>/', views.menu_put, name="update"),
+     path('menu/delete/<int:id>/', views.menu_delete, name="delete"),
 
      # Menu Category CRUD
-     path('MenuCategory/update/<int:id>/', views.MenyCategoryUpdate, name="update"),
-     path('MenuCategory/delete/<int:id>/', views.MenuCategoryDelete, name="delete"),
+     path('MenuCategory/update/<int:id>/', views.meny_category_update, name="update"),
+     path('MenuCategory/delete/<int:id>/', views.menu_category_delete, name="delete"),
 
 
 
      # Item CURD
 
-     path('menu/item/update/<int:id>/', views.ItemUpdate, name="update"),
-     path('menu/item/delete/<int:id>/', views.ItemDelete, name="delete"),
+     path('menu/item/update/<int:id>/', views.item_update, name="update"),
+     path('menu/item/delete/<int:id>/', views.item_delete, name="delete"),
 
      # Addon Category CRUD
-     path('addon_category/update/<int:id>/', views.AddonCategoryPut, name="update"),
-     path('addon_category/delete/<int:id>/', views.AddonCategorytemDelete, name="delete"),
+     path('addon_category/update/<int:id>/', views.addon_category_put, name="update"),
+     path('addon_category/delete/<int:id>/', views.addon_category_item_delete, name="delete"),
 
      # Addon Item CRUD
-     path('addon_item/update/<int:id>/', views.AddonItemPut, name="update"),
-     path('addon_item/delete/<int:id>/', views.AddonItemDelete, name="delete"),
+     path('addon_item/update/<int:id>/', views.addon_item_put, name="update"),
+     path('addon_item/delete/<int:id>/', views.addon_item_delete, name="delete"),
      #
 
      # Standard  CRUD
-     path('standard_data/update/<int:id>/', views.StandardPut, name="update"),
-     path('standard/delete/<int:id>/', views.StandardDelete, name="delete"),
+     path('standard_data/update/<int:id>/', views.standard_put, name="update"),
+     path('standard/delete/<int:id>/', views.standard_delete, name="delete"),
 
      # Room  CRUD
-     path('room/update/<int:id>/', views.RoomPut, name="update"),
-     path('room/delete/<int:id>/', views.RoomDelete, name="delete"),
+     path('room/update/<int:id>/', views.room_put, name="update"),
+     path('room/delete/<int:id>/', views.room_delete, name="delete"),
 
 
 ]
