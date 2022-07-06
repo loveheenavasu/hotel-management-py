@@ -70,7 +70,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     class Meta:
-        db_table = "User"
+        db_table = "user"
         verbose_name = 'user'
         verbose_name_plural = 'users'
 
