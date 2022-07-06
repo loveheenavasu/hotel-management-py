@@ -5,7 +5,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .permissions import IsAdmin, IsUser, IsStaff
+from .permissions import IsUser, IsStaff
 
 
 # Token authentication
@@ -65,13 +65,13 @@ def UserDelete(request, id):
 # Company View
 
 class CompanyEdit(ModelViewSet):
-    permission_classes = [IsAdmin, ]
+    permission_classes = [IsStaff, ]
     queryset = Company.objects.all()
     serializer_class = CompanyEditSerializer
 
 
 class Company(ModelViewSet):
-    permission_classes = [IsAdmin, ]
+    permission_classes = [IsStaff, ]
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
 
@@ -111,13 +111,13 @@ def CompanyDelete(request, id):
 
 # Menu Crud
 class MenuPost(ModelViewSet):
-    permission_classes = [IsAdmin, ]
+    permission_classes = [IsStaff, ]
     queryset = Menu.objects.all()
     serializer_class = MenuEditSerializer
 
 
 class MenuGet(ModelViewSet):
-    permission_classes = [IsAdmin, ]
+    permission_classes = [IsStaff, ]
     queryset = Menu.objects.all()
     serializer_class = MenuGetSerializer
 
@@ -155,13 +155,13 @@ def MenuDelete(request, id):
 # Menu category Curd
 
 class MenuCategoryPost(ModelViewSet):
-    permission_classes = [IsAdmin, ]
+    permission_classes = [IsStaff, ]
     queryset = MenuCategory.objects.all()
     serializer_class = MenuCategoryEditSerializer
 
 
 class MenuCategoryGet(ModelViewSet):
-    permission_classes = [IsAdmin, ]
+    permission_classes = [IsStaff, ]
     queryset = MenuCategory.objects.all()
     serializer_class = MenuCategoryGetSerializer
 
@@ -227,13 +227,13 @@ def MenuCategoryDelete(request, id):
 # Menu Item CRUD
 
 class ItemsPost(ModelViewSet):
-    permission_classes = [IsAdmin, ]
+    permission_classes = [IsStaff, ]
     queryset = Items.objects.all()
     serializer_class = ItemsEditSerializer
 
 
 class ItemsGet(ModelViewSet):
-    permission_classes = [IsAdmin, ]
+    permission_classes = [IsStaff, ]
     queryset = Items.objects.all()
     serializer_class = ItemsGetSerializer
 
@@ -271,13 +271,13 @@ def ItemDelete(request, id):
 # Addon Category crud
 
 class AddonCategoryEdit(ModelViewSet):
-    permission_classes = [IsAdmin, ]
+    permission_classes = [IsStaff, ]
     queryset = AddonCategory.objects.all()
     serializer_class = AddonCategoryEditSerializer
 
 
 class AddonCategoryGet(ModelViewSet):
-    permission_classes = [IsAdmin, ]
+    permission_classes = [IsStaff, ]
     queryset = AddonCategory.objects.all()
     serializer_class = AddonCategoryGetSerializer
 
@@ -312,13 +312,13 @@ def AddonCategorytemDelete(request, id):
 
 # addon item views CURD
 class addonItemsEdit(ModelViewSet):
-    permission_classes = [IsAdmin, ]
+    permission_classes = [IsStaff, ]
     queryset = AddonItem.objects.all()
     serializer_class = AddonItemEditSerializer
 
 
 class addonItemsGet(ModelViewSet):
-    permission_classes = [IsAdmin, ]
+    permission_classes = [IsStaff, ]
     queryset = AddonItem.objects.all()
     serializer_class = AddonItemGetSerializer
 
@@ -353,15 +353,15 @@ def AddonItemDelete(request, id):
         return Response({"msg": "Data deleted"})
 
 # Standard Crud
-
 class StandardEdit(ModelViewSet):
-    permission_classes = [IsAdmin, ]
+    permission_classes = [IsStaff, ]
+
     queryset = Standard.objects.all()
     serializer_class = StandardEditSerializer
 
 
 class StandardGet(ModelViewSet):
-    permission_classes = [IsAdmin, ]
+    permission_classes = [IsStaff, ]
     queryset = Standard.objects.all()
     serializer_class = StandardGetSerializer
 
@@ -395,13 +395,13 @@ def StandardDelete(request, id):
 # Room Crud
 
 class RooomEdit(ModelViewSet):
-    permission_classes = [IsAdmin, ]
+    permission_classes = [IsStaff, ]
     queryset = Room.objects.all()
     serializer_class = RoomEditSerializer
 
 
 class RoomGet(ModelViewSet):
-    permission_classes = [IsAdmin, ]
+    permission_classes = [IsStaff, ]
     queryset = Room.objects.all()
     serializer_class = RoomGetSerializer
 

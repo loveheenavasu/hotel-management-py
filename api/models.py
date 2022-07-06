@@ -195,6 +195,7 @@ Room_Choices = (('room', 'Room'), ('table', 'Table'))
 
 
 class Room(models.Model):
+
     room_number = models.IntegerField()
     type = models.CharField(max_length=255, choices=Room_Choices)
     resident = models.ForeignKey(User, on_delete=models.CASCADE)
