@@ -10,6 +10,7 @@ class UserSerializerGet(serializers.ModelSerializer):
         fields = '__all__'
 
 
+
 class UserSerializer(serializers.ModelSerializer):
     """user serializer"""
     class Meta:
@@ -44,7 +45,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
                     'refresh': str(refresh),
                     'access': str(refresh.access_token),
                     'email': user.email,
-                    'message': 'Login successfully'
+                    'message': 'Login successfully',
+                    'user': GetUserSerializer(user).data
                 }
                 return data
             return {"message": 'please enter valid email and password', 'status': 400}
@@ -64,6 +66,11 @@ class RoleSerializer(serializers.ModelSerializer):
         model = Role
         fields = '__all__'
 
+class GetUserSerializer(serializers.ModelSerializer):
+    roles = RoleSerializer(read_only=True)
+    class Meta:
+        model = User
+        exclude = ['password', ]
 
 # company serializer
 class CompanySerializer(serializers.ModelSerializer):

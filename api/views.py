@@ -31,7 +31,7 @@ class UserEdit(ModelViewSet):
 class UserGet(ModelViewSet):
     permission_classes = [AllowAny, ]
     queryset = User.objects.all()
-    serializer_class = UserSerializerGet
+    serializer_class = GetUserSerializer
 
 
 @api_view(['PUT'])
