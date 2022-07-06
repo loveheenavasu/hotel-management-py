@@ -5,7 +5,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .permissions import IsUser, IsStaff
+from .permissions import IsUser, IsStaff, IsAdmin
 
 
 # Token authentication
@@ -23,11 +23,13 @@ class AssignRole(ModelViewSet):
 
 # User Register Crud
 class UserEdit(ModelViewSet):
+    # permission_classes = [AllowAny, ]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
 class UserGet(ModelViewSet):
+    permission_classes = [AllowAny, ]
     queryset = User.objects.all()
     serializer_class = UserSerializerGet
 
@@ -61,13 +63,13 @@ def user_delete(request, id):
 
 # Company View
 class CompanyEdit(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = Company.objects.all()
     serializer_class = CompanyEditSerializer
 
 
 class Company(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
 
@@ -101,13 +103,13 @@ def company_delete(request, id):
 
 # Menu Crud
 class MenuPost(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = Menu.objects.all()
     serializer_class = MenuEditSerializer
 
 
 class MenuGet(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = Menu.objects.all()
     serializer_class = MenuGetSerializer
 
@@ -141,13 +143,13 @@ def menu_delete(request, id):
 
 # Menu category Curd
 class MenuCategoryPost(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = MenuCategory.objects.all()
     serializer_class = MenuCategoryEditSerializer
 
 
 class MenuCategoryGet(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = MenuCategory.objects.all()
     serializer_class = MenuCategoryGetSerializer
 
@@ -208,13 +210,13 @@ def menu_category_delete(request, id):
 
 # Menu Item CRUD
 class ItemsPost(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = Items.objects.all()
     serializer_class = ItemsEditSerializer
 
 
 class ItemsGet(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = Items.objects.all()
     serializer_class = ItemsGetSerializer
 
@@ -249,13 +251,13 @@ def item_delete(request, id):
 ####
 # Addon Category crud
 class AddonCategoryEdit(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = AddonCategory.objects.all()
     serializer_class = AddonCategoryEditSerializer
 
 
 class AddonCategoryGet(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = AddonCategory.objects.all()
     serializer_class = AddonCategoryGetSerializer
 
@@ -289,13 +291,13 @@ def addon_category_item_delete(request, id):
 
 # addon item views CURD
 class AddonItemsEdit(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = AddonItem.objects.all()
     serializer_class = AddonItemEditSerializer
 
 
 class AddonItemsGet(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = AddonItem.objects.all()
     serializer_class = AddonItemGetSerializer
 
@@ -329,14 +331,14 @@ def addon_item_delete(request, id):
 
 # Standard Crud
 class StandardEdit(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
 
     queryset = Standard.objects.all()
     serializer_class = StandardEditSerializer
 
 
 class StandardGet(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = Standard.objects.all()
     serializer_class = StandardGetSerializer
 
@@ -370,13 +372,13 @@ def standard_delete(request, id):
 
 # Room Crud
 class RoomEdit(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = Room.objects.all()
     serializer_class = RoomEditSerializer
 
 
 class RoomGet(ModelViewSet):
-    permission_classes = [IsStaff, ]
+    permission_classes = [IsAdmin, ]
     queryset = Room.objects.all()
     serializer_class = RoomGetSerializer
 

@@ -47,7 +47,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_email_verified = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_user = models.BooleanField(default=True)
-    roles = models.ForeignKey(Role, on_delete=models.CASCADE)
+    roles = models.ForeignKey(Role, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_created=True, auto_now=True)
     modified_at = models.DateTimeField(auto_now=True)
 
@@ -62,8 +62,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                                    help_text='Designates whether the user can log into this admin site.',
                                    )
     date_joined = models.DateTimeField(auto_now_add=True)
-    contact = models.BigIntegerField()
-    contact_is_verified = models.BooleanField(default=False)
+    contact = models.BigIntegerField(null=True, blank=True)
+    contact_is_verified = models.BooleanField(default=False, null=True, blank=True)
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
