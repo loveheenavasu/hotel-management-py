@@ -92,7 +92,8 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-AUTH_USER_MODEL = 'api.User'
+
+# AUTH_USER_MODEL = 'api.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
