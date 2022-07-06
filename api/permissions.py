@@ -1,15 +1,17 @@
 from rest_framework.permissions import BasePermission
 
-class IsSuperUser(BasePermission):
-    def has_permission(self, request, view):
-        return bool(request.user and request.user.is_superuser)
-
 
 
 class IsStaff(BasePermission):
     def has_permission(self, request, view):
         is_not_client = (False if request.user.is_superuser else True)
         return bool(request.user and request.user.is_staff and is_not_client)
+    
+class IsSuperUser(BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_superuser)
+
+
 
 
 class IsUser(BasePermission):
