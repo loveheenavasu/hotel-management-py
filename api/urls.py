@@ -17,8 +17,8 @@ router.register(r'company', Company, basename='company'),
 router.register(r'CompanyEdit', CompanyEdit, basename='CompanyEdit'),
 router.register(r'menu/edit', MenuPost, basename='menu_edit'),
 router.register(r'menu', MenuGet, basename='Menu_get'),
-router.register(r'menu/category/edit', MenuCategoryPost, basename='MenuCategoryPost'),
-router.register(r'menu/category', MenuCategoryGet, basename='category'),
+router.register(r'menu/category', MenuCategoryPost, basename='MenuCategoryPost'),
+router.register(r'menu-category', MenuCategoryGet, basename='menu_category'),
 router.register(r'item/edit',  ItemsPost, basename='menu_item'),
 router.register(r'items', ItemsGet, basename='menu_item_get'),
 router.register(r'addon/category/edit', AddonCategoryEdit, basename='addon_category'),
@@ -53,6 +53,7 @@ urlpatterns = [
      # Menu Category CRUD
      path('MenuCategory/update/<int:id>/', views.meny_category_update, name="update"),
      path('MenuCategory/delete/<int:id>/', views.menu_category_delete, name="delete"),
+     path('menu_category/', GetMenuCategory.as_view(), name="menu_category"),
 
 
 
@@ -77,7 +78,8 @@ urlpatterns = [
      # Room  CRUD
      path('room/update/<int:id>/', views.room_put, name="update"),
      path('room/delete/<int:id>/', views.room_delete, name="delete"),
-
+     path('get-menu-category', GetMenuCategory.as_view(), name="get-menu-category"),
+     # path('menu-category', MenuCategoryGet.as_view(), name="menu-category"),
 
 ]
 # if settings.DEBUG: urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

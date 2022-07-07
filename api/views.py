@@ -6,6 +6,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .permissions import IsUser, IsStaff, IsAdmin
+from rest_framework.decorators import action
+from rest_framework import status
+from rest_framework.views import APIView
 
 
 # Token authentication
@@ -32,6 +35,11 @@ class UserGet(ModelViewSet):
     permission_classes = [AllowAny, ]
     queryset = User.objects.all()
     serializer_class = GetUserSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset  = User.objects.all()
+        serializer = GetUserSerializer(queryset, many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
 
 @api_view(['PUT'])
@@ -100,6 +108,9 @@ def company_delete(request, id):
         return Response({"msg": "Data deleted"})
 
 
+# def get_menuprice()
+
+
 # Menu Crud
 class MenuPost(ModelViewSet):
     permission_classes = [IsAdmin, ]
@@ -151,6 +162,18 @@ class MenuCategoryGet(ModelViewSet):
     permission_classes = [IsAdmin, ]
     queryset = MenuCategory.objects.all()
     serializer_class = MenuCategoryGetSerializer
+
+
+# class MenuCategoryGet(APIView):
+#
+#     def get(self, request):
+#         print('***************************************')
+#         menu_categories = MenuCategory.objects.all()
+#         serializer = MenuCategoryGetSerializer(menu_categories, many=True)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+    # permission_classes = [IsAdmin, ]
+    # queryset = MenuCategory.objects.all()
+    # serializer_class = MenuCategoryGetSerializer
 
 
 @api_view(['PUT'])
@@ -407,3 +430,17 @@ def room_delete(request, id):
     if request.method == "DELETE":
         Room.objects.get(id=id).delete()
         return Response({"msg": "Data deleted"})
+
+
+class GetMenuCategory(APIView):
+    permission_classes = [IsAdmin, ]
+    def get(self, request):
+        try:
+            menu_id = request.query_params['id']
+            menu_category = MenuCategory.objects.filter(menu_id=menu_id)
+            serializer = MenuCategoryGetSerializer(menu_category, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
