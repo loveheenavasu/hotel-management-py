@@ -145,15 +145,15 @@ class MenuCategory(models.Model):
 
 
 class AddonCategory(models.Model):
-    name = models.CharField(max_length=255)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)
 
 
 class AddonItem(models.Model):
+    addon_category = models.ForeignKey(AddonCategory, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=255)
     price = models.CharField(max_length=255)
-    addon_category = models.ForeignKey(AddonCategory, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class Items(models.Model):
@@ -171,19 +171,6 @@ class Items(models.Model):
     is_new = models.BooleanField()
 
 
-# class Order_item(models.Model):
-#     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-#     item = models.ForeignKey(Items, on_delete=models.CASCADE)
-#     quantity = models.IntegerField()
-#
-#
-# class Room_service(models.Model):
-#     room = models.ForeignKey(Company, on_delete=models.CASCADE)
-#     name = models.CharField(max_length=255)
-#     company = models.CharField(max_length=255)
-#     created = models.DateTimeField(auto_now_add=True)
-
-
 # Standard Model
 class Standard(models.Model):
     name = models.CharField(max_length=100)
@@ -195,8 +182,60 @@ Room_Choices = (('room', 'Room'), ('table', 'Table'))
 
 
 class Room(models.Model):
+    resident = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    standard = models.ForeignKey(Standard, on_delete=models.CASCADE, null=True, blank=True)
+    room_number = models.IntegerField(null=True, blank=True)
+    type = models.CharField(max_length=255, choices=Room_Choices, null=True, blank=True)
 
-    room_number = models.IntegerField()
-    type = models.CharField(max_length=255, choices=Room_Choices)
-    resident = models.ForeignKey(User, on_delete=models.CASCADE)
-    standard = models.ForeignKey(Standard, on_delete=models.CASCADE)
+
+class Guests(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
+    phone = models.IntegerField(null=True, blank=True)
+    address = models.CharField(max_length=300, null=True, blank=True)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    pincode = models.IntegerField(null=True, blank=True)
+    tag_along_guests = models.CharField(max_length=100, null=True, blank=True)
+    wallet_amount = models.IntegerField(null=True, blank=True)
+    identity_proof = models.CharField(max_length=100, null=True, blank=True)
+
+
+class Coupon(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
+    code = models.CharField(max_length=100, null=True, blank=True)
+    discount_type = models.CharField(max_length=100, null=True, blank=True)
+    discount_amount = models.IntegerField(null=True, blank=True)
+    valid_till = models.DateTimeField(null=True, blank=True)
+    max_usage = models.IntegerField(null=True, blank=True)
+    min_subtotal = models.IntegerField(null=True, blank=True)
+    subtext = models.TextField(max_length=300, null=True, blank=True)
+    type = models.CharField(max_length=100, null=True, blank=True)
+    affiliate = models.CharField(max_length=100, null=True, blank=True)
+    is_active = models.BooleanField(null=True, blank=True)
+
+
+class Order(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
+    coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE, null=True, blank=True)
+    guest = models.CharField(max_length=100, null=True, blank=True)
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
+    item = models.ForeignKey(Items, on_delete=models.CASCADE, null=True, blank=True)
+    quantity = models.IntegerField()
+
+
+# class Room_service(models.Model):
+#     room = models.ForeignKey(Company, on_delete=models.CASCADE)
+#     name = models.CharField(max_length=255)
+#     company = models.CharField(max_length=255)
+#     created = models.DateTimeField(auto_now_add=True)
+
+
+
+
+

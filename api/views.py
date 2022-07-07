@@ -67,7 +67,6 @@ class CompanyEdit(ModelViewSet):
     queryset = Company.objects.all()
     serializer_class = CompanyEditSerializer
 
-
 class Company(ModelViewSet):
     permission_classes = [IsAdmin, ]
     queryset = Company.objects.all()
