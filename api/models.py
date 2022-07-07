@@ -88,7 +88,9 @@ class Menu(models.Model):
     name = models.CharField(max_length=255)
     image = models.ImageField()
     time_scheduling = models.BooleanField()
-    description = models.TextField()
+    earnings = models.DecimalField(max_digits=10, default=0, decimal_places=2)
+    item_stock = models.IntegerField(default=0)
+    description = models.TextField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
 
@@ -201,8 +203,13 @@ class Guests(models.Model):
     identity_proof = models.CharField(max_length=100, null=True, blank=True)
 
 
+class Affiliate(models.Model):
+    pass
+
+
 class Coupon(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
+    affiliate = models.ForeignKey(Affiliate, on_delete=models.CASCADE, null=True, blank=True)
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=100, null=True, blank=True)
     code = models.CharField(max_length=100, null=True, blank=True)
@@ -213,7 +220,6 @@ class Coupon(models.Model):
     min_subtotal = models.IntegerField(null=True, blank=True)
     subtext = models.TextField(max_length=300, null=True, blank=True)
     type = models.CharField(max_length=100, null=True, blank=True)
-    affiliate = models.CharField(max_length=100, null=True, blank=True)
     is_active = models.BooleanField(null=True, blank=True)
 
 
