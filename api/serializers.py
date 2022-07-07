@@ -10,7 +10,6 @@ class UserSerializerGet(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
 class UserSerializer(serializers.ModelSerializer):
     """user serializer"""
     class Meta:
@@ -66,11 +65,13 @@ class RoleSerializer(serializers.ModelSerializer):
         model = Role
         fields = '__all__'
 
+
 class GetUserSerializer(serializers.ModelSerializer):
     roles = RoleSerializer(read_only=True)
     class Meta:
         model = User
         exclude = ['password', ]
+
 
 # company serializer
 class CompanySerializer(serializers.ModelSerializer):
