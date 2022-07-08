@@ -440,31 +440,36 @@ class GetMenuCategory(APIView):
     def get(self, request):
         try:
             menu_id = request.query_params['id']
+
             menu_category = MenuCategory.objects.filter(menu_id=menu_id)
             serializer = MenuCategoryGetSerializer(menu_category, many=True)
-            return Response({"data":serializer.data,"status":status.HTTP_201_CREATED})
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+
 class ImageLink(APIView):
-
     def post(self, request):
-        host = 'https://hotel-management-live.herokuapp.com'
-        file_obj = request.FILES['image']
-        print(file_obj.name)
-        BASE_DIR = Path(__file__).resolve().parent.parent
-        # img_extension = os.path.splitext(file_obj.name)[1]
-        # save_path = os.path.join(os.path.join(host, BASE_DIR), 'images/')
-        save_path = os.path.join(str(BASE_DIR), 'images/')
-        if not os.path.exists(save_path):
-            os.makedirs(save_path)
+        try:
+            # host = 'https://hotel-management-live.herokuapp.com'
+            file_obj = request.FILES['image']
+            print(file_obj.name)
+            BASE_DIR = Path(__file__).resolve().parent.parent
+            # img_extension = os.path.splitext(file_obj.name)[1]
+            # save_path = os.path.join(os.path.join(host, BASE_DIR), 'images/')
+            save_path = os.path.join(str(BASE_DIR), 'images\\')
+            if not os.path.exists(save_path):
+                os.makedirs(save_path)
 
-        with open(os.path.join(save_path+str(file_obj.name)), "wb+") as file:
-            for chunk in file_obj.chunks():
-                file.write(chunk)
+            with open(os.path.join(save_path+str(file_obj.name)), "wb+") as file:
+                for chunk in file_obj.chunks():
+                    file.write(chunk)
 
-        image_link = os.path.join(host+save_path,str(file_obj.name))
-        return Response({"image_link":image_link})
+            # image_link = os.path.join(host+save_path,str(file_obj.name))
+            image_link = os.path.join(save_path, str(file_obj.name))
+            return Response({"image_link":image_link},status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         # with default_storage.open(filename, 'wb+') as destination:
         #     for chunk in file_obj.chunks():

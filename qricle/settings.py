@@ -183,4 +183,4 @@ django_heroku.settings(locals())
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'data/')
-MEDIA_URL = '/media/'
+MEDIA_URL = '/images/'
