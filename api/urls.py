@@ -17,7 +17,7 @@ router.register(r'company', Company, basename='company'),
 router.register(r'CompanyEdit', CompanyEdit, basename='CompanyEdit'),
 router.register(r'menu/edit', MenuPost, basename='menu_edit'),
 router.register(r'menu', MenuGet, basename='Menu_get'),
-router.register(r'menu/category', MenuCategoryPost, basename='MenuCategoryPost'),
+router.register(r'menu/category/post', MenuCategoryPost, basename='MenuCategoryPost'),
 router.register(r'menu-category', MenuCategoryGet, basename='menu_category'),
 router.register(r'item/edit',  ItemsPost, basename='menu_item'),
 router.register(r'items', ItemsGet, basename='menu_item_get'),
@@ -79,6 +79,7 @@ urlpatterns = [
      path('room/update/<int:id>/', views.room_put, name="update"),
      path('room/delete/<int:id>/', views.room_delete, name="delete"),
      path('get-menu-category', GetMenuCategory.as_view(), name="get-menu-category"),
+     path('image-link', ImageLink.as_view(), name="image-link"),
      # path('menu-category', MenuCategoryGet.as_view(), name="menu-category"),
 
 ]

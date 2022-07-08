@@ -9,6 +9,7 @@ from .permissions import IsUser, IsStaff, IsAdmin
 from rest_framework.decorators import action
 from rest_framework import status
 from rest_framework.views import APIView
+from datetime import datetime
 
 
 # Token authentication
@@ -116,6 +117,16 @@ class MenuPost(ModelViewSet):
     permission_classes = [IsAdmin, ]
     queryset = Menu.objects.all()
     serializer_class = MenuEditSerializer
+
+
+    def create(self, request, *args, **kwargs):
+        try:
+            queryset = request.POST
+            print(queryset)
+            serializer = MenuEditSerializer(instance=queryset, data=queryset)
+            return Response({"data":serializer.data,"status":status.HTTP_201_CREATED})
+        except Exception as e:
+            return Response({"message","Bad Request"},status=status.HTTP_400_BAD_REQUEST)
 
 
 class MenuGet(ModelViewSet):
@@ -439,8 +450,13 @@ class GetMenuCategory(APIView):
             menu_id = request.query_params['id']
             menu_category = MenuCategory.objects.filter(menu_id=menu_id)
             serializer = MenuCategoryGetSerializer(menu_category, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response({"data":serializer.data,"status":status.HTTP_201_CREATED})
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+class ImageLink(APIView):
 
+    def post(self, request):
+        name = datetime.now().replace(microsecond=0).isoformat() + request.data.get('image')
+        link = 'hotel-management-py/{}'.format(name)
+        return Response({"image":link})
