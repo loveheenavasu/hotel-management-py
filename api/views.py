@@ -123,6 +123,16 @@ class MenuPost(ModelViewSet):
     serializer_class = MenuEditSerializer
 
 
+    # def create(self, request, *args, **kwargs):
+    #     try:
+    #         queryset = request.POST
+    #         print(queryset)
+    #         serializer = MenuEditSerializer(instance=queryset, data=queryset)
+    #         return Response({"data":serializer.data,"status":status.HTTP_201_CREATED})
+    #     except Exception as e:
+    #         return Response({"message","Bad Request"},status=status.HTTP_400_BAD_REQUEST)
+
+
 class MenuGet(ModelViewSet):
     permission_classes = [IsAdmin, ]
     queryset = Menu.objects.all()
@@ -167,18 +177,6 @@ class MenuCategoryGet(ModelViewSet):
     permission_classes = [IsAdmin, ]
     queryset = MenuCategory.objects.all()
     serializer_class = MenuCategoryGetSerializer
-
-
-# class MenuCategoryGet(APIView):
-#
-#     def get(self, request):
-#         print('***************************************')
-#         menu_categories = MenuCategory.objects.all()
-#         serializer = MenuCategoryGetSerializer(menu_categories, many=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-    # permission_classes = [IsAdmin, ]
-    # queryset = MenuCategory.objects.all()
-    # serializer_class = MenuCategoryGetSerializer
 
 
 @api_view(['PUT'])
@@ -465,7 +463,6 @@ class ImageLink(APIView):
 
         image_link = os.path.join(save_path+str(file_obj.name))
         return Response({"image_link":image_link})
-
 
         # with default_storage.open(filename, 'wb+') as destination:
         #     for chunk in file_obj.chunks():
