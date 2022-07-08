@@ -245,6 +245,15 @@ class ItemsGet(ModelViewSet):
     queryset = Items.objects.all()
     serializer_class = ItemsGetSerializer
 
+    def retrieve(self, request, pk=None):
+        # queryset = Items.objects.all()
+        # get_item = get_object_or_404(queryset, pk=pk)
+        data = []
+        get_item = Items.objects.get(id=pk)
+        serializer = ItemsGetSerializer(get_item)
+        data.append(serializer.data)
+        return Response(data, status=status.HTTP_200_OK)
+
 
 @api_view(['PUT'])
 def item_update(request, id):
