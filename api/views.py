@@ -449,7 +449,7 @@ class GetMenuCategory(APIView):
 class ImageLink(APIView):
 
     def post(self, request):
-        host = 'https://hotel-management-live.herokuapp.com/'
+        host = 'https://hotel-management-live.herokuapp.com'
         file_obj = request.FILES['image']
         print(file_obj.name)
         BASE_DIR = Path(__file__).resolve().parent.parent
