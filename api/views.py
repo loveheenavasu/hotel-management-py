@@ -123,16 +123,6 @@ class MenuPost(ModelViewSet):
     serializer_class = MenuEditSerializer
 
 
-    # def create(self, request, *args, **kwargs):
-    #     try:
-    #         queryset = request.POST
-    #         print(queryset)
-    #         serializer = MenuEditSerializer(instance=queryset, data=queryset)
-    #         return Response({"data":serializer.data,"status":status.HTTP_201_CREATED})
-    #     except Exception as e:
-    #         return Response({"message","Bad Request"},status=status.HTTP_400_BAD_REQUEST)
-
-
 class MenuGet(ModelViewSet):
     permission_classes = [IsAdmin, ]
     queryset = Menu.objects.all()
@@ -462,10 +452,9 @@ class ImageLink(APIView):
 
     def post(self, request):
         file_obj = request.FILES['image']
-        # a = os.path.abspath(os.path.dirname(__file__))
         print(file_obj.name)
         BASE_DIR = Path(__file__).resolve().parent.parent
-        img_extension = os.path.splitext(file_obj.name)[1]
+        # img_extension = os.path.splitext(file_obj.name)[1]
         save_path = os.path.join(BASE_DIR, 'images\\')
         if not os.path.exists(save_path):
             os.makedirs(save_path)
@@ -476,6 +465,8 @@ class ImageLink(APIView):
 
         image_link = os.path.join(save_path+str(file_obj.name))
         return Response({"image_link":image_link})
+
+
         # with default_storage.open(filename, 'wb+') as destination:
         #     for chunk in file_obj.chunks():
         #         destination.write(chunk)
