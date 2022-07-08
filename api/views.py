@@ -10,6 +10,10 @@ from rest_framework.decorators import action
 from rest_framework import status
 from rest_framework.views import APIView
 from datetime import datetime
+from django.core.files.storage import default_storage
+import os
+# import cv2
+from pathlib import Path
 
 
 # Token authentication
@@ -119,14 +123,14 @@ class MenuPost(ModelViewSet):
     serializer_class = MenuEditSerializer
 
 
-    def create(self, request, *args, **kwargs):
-        try:
-            queryset = request.POST
-            print(queryset)
-            serializer = MenuEditSerializer(instance=queryset, data=queryset)
-            return Response({"data":serializer.data,"status":status.HTTP_201_CREATED})
-        except Exception as e:
-            return Response({"message","Bad Request"},status=status.HTTP_400_BAD_REQUEST)
+    # def create(self, request, *args, **kwargs):
+    #     try:
+    #         queryset = request.POST
+    #         print(queryset)
+    #         serializer = MenuEditSerializer(instance=queryset, data=queryset)
+    #         return Response({"data":serializer.data,"status":status.HTTP_201_CREATED})
+    #     except Exception as e:
+    #         return Response({"message","Bad Request"},status=status.HTTP_400_BAD_REQUEST)
 
 
 class MenuGet(ModelViewSet):
@@ -457,6 +461,27 @@ class GetMenuCategory(APIView):
 class ImageLink(APIView):
 
     def post(self, request):
-        name = datetime.now().replace(microsecond=0).isoformat() + request.data.get('image')
-        link = 'hotel-management-py/{}'.format(name)
-        return Response({"image":link})
+        file_obj = request.FILES['image']
+        # a = os.path.abspath(os.path.dirname(__file__))
+        print(file_obj.name)
+        BASE_DIR = Path(__file__).resolve().parent.parent
+        img_extension = os.path.splitext(file_obj.name)[1]
+        save_path = os.path.join(BASE_DIR, 'images\\')
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
+
+        with open(os.path.join(save_path+str(file_obj.name)), "wb+") as file:
+            for chunk in file_obj.chunks():
+                file.write(chunk)
+
+        image_link = os.path.join(save_path+str(file_obj.name))
+        return Response({"image_link":image_link})
+        # with default_storage.open(filename, 'wb+') as destination:
+        #     for chunk in file_obj.chunks():
+        #         destination.write(chunk)
+
+        # # Create image save path with title
+        # img_save_path = os.path.join(save_path,file_obj)
+        # img_save_path = img_save_path.replace('/','\\')
+        # cv2.imwrite(img_save_path)
+
