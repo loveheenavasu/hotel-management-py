@@ -23,8 +23,8 @@ router.register(r'menu-category', MenuCategoryDetails, basename='menu_category')
 router.register(r'items', ItemsDetails, basename='menu_item_get'),
 # router.register(r'addon/category/edit', AddonCategoryEdit, basename='addon_category'),
 router.register(r'addon/category', AddonCategoryDetails, basename='addonCategory'),
-router.register(r'addon/item/edit', AddonItemsEdit, basename='addon_item_edit'),
-router.register(r'addon/item', AddonItemsGet, basename='addon_item'),
+# router.register(r'addon/item/edit', AddonItemsEdit, basename='addon_item_edit'),
+router.register(r'addon/item', AddonItemsDetails, basename='addon_item'),
 router.register(r'standard/edit', StandardEdit, basename='standard_edit'),
 router.register(r'standard/data', StandardGet, basename='standard_data'),
 router.register(r'room/edit', RoomEdit, basename='room_edit'),
@@ -68,8 +68,8 @@ urlpatterns = [
      # path('addon_category/delete/<int:id>/', views.addon_category_item_delete, name="delete"),
 
      # Addon Item CRUD
-     path('addon_item/update/<int:id>/', views.addon_item_put, name="update"),
-     path('addon_item/delete/<int:id>/', views.addon_item_delete, name="delete"),
+     # path('addon_item/update/<int:id>/', views.addon_item_put, name="update"),
+     # path('addon_item/delete/<int:id>/', views.addon_item_delete, name="delete"),
      #
 
      # Standard  CRUD

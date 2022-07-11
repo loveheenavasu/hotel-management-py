@@ -36,9 +36,15 @@ class UserEdit(ModelViewSet):
     serializer_class = UserSerializer
 
     def list(self, request, *args, **kwargs):
-        queryset  = User.objects.all()
-        serializer = UserSerializer(queryset, many=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+        try:
+            try:
+                queryset  = User.objects.all()
+                serializer = UserSerializer(queryset, many=True)
+            except:
+                pass
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -57,9 +63,12 @@ class UserEdit(ModelViewSet):
     def retrieve(self, request, pk=None):
         data = []
         try:
-            get_user = User.objects.get(id=pk)
-            serializer = UserSerializer(get_user)
-            data.append(serializer.data)
+            try:
+                get_user = User.objects.get(id=pk)
+                serializer = UserSerializer(get_user)
+                data.append(serializer.data)
+            except:
+                pass
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(data, status=status.HTTP_200_OK)
@@ -85,9 +94,12 @@ class UserEdit(ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         data = []
         try:
-            user = self.get_object()
-            user.is_active = False
-            user.delete()
+            try:
+                user = self.get_object()
+                user.is_active = False
+                user.delete()
+            except:
+                pass
             return Response(data={"status": "success", "message": "Deleted Successfully"},
                             status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
@@ -238,9 +250,12 @@ class CompanyDetails(ModelViewSet):
     serializer_class = CompanySerializer
 
     def list(self, request, *args, **kwargs):
-        queryset  = Company.objects.all()
-        serializer = CompanySerializer(queryset, many=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+        try:
+            queryset  = Company.objects.all()
+            serializer = CompanySerializer(queryset, many=True)
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -276,9 +291,12 @@ class CompanyDetails(ModelViewSet):
     def retrieve(self, request, pk=None):
         data = []
         try:
-            get_company = Company.objects.get(id=pk)
-            serializer = CompanySerializer(get_company)
-            data.append(serializer.data)
+            try:
+                get_company = Company.objects.get(id=pk)
+                serializer = CompanySerializer(get_company)
+                data.append(serializer.data)
+            except:
+                pass
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(data, status=status.HTTP_200_OK)
@@ -362,9 +380,12 @@ class MenuDetails(ModelViewSet):
     serializer_class = MenuGetSerializer
 
     def list(self, request, *args, **kwargs):
-        queryset = Menu.objects.all()
-        serializer = MenuGetSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        try:
+            queryset = Menu.objects.all()
+            serializer = MenuGetSerializer(queryset, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
         serializer = MenuEditSerializer(data=request.data)
@@ -402,9 +423,12 @@ class MenuDetails(ModelViewSet):
     def retrieve(self, request, pk=None):
         data = []
         try:
-            get_menu = Menu.objects.get(id=pk)
-            serializer = MenuGetSerializer(get_menu)
-            data.append(serializer.data)
+            try:
+                get_menu = Menu.objects.get(id=pk)
+                serializer = MenuGetSerializer(get_menu)
+                data.append(serializer.data)
+            except:
+                pass
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(data, status=status.HTTP_200_OK)
@@ -462,9 +486,12 @@ class MenuCategoryDetails(ModelViewSet):
     serializer_class = MenuCategoryGetSerializer
 
     def list(self, request, *args, **kwargs):
-        queryset = MenuCategory.objects.all()
-        serializer = MenuCategoryGetSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        try:
+            queryset = MenuCategory.objects.all()
+            serializer = MenuCategoryGetSerializer(queryset, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
         serializer = MenuCategoryEditSerializer(data=request.data)
@@ -502,9 +529,12 @@ class MenuCategoryDetails(ModelViewSet):
     def retrieve(self, request, pk=None):
         data = []
         try:
-            get_menu_category = MenuCategory.objects.get(id=pk)
-            serializer = MenuCategoryGetSerializer(get_menu_category)
-            data.append(serializer.data)
+            try:
+                get_menu_category = MenuCategory.objects.get(id=pk)
+                serializer = MenuCategoryGetSerializer(get_menu_category)
+                data.append(serializer.data)
+            except:
+                pass
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(data, status=status.HTTP_200_OK)
@@ -588,9 +618,12 @@ class ItemsDetails(ModelViewSet):
     serializer_class = ItemsGetSerializer
 
     def list(self, request, *args, **kwargs):
-        queryset = Items.objects.all()
-        serializer = ItemsGetSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        try:
+            queryset = Items.objects.all()
+            serializer = ItemsGetSerializer(queryset, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
         serializer = ItemsEditSerializer(data=request.data)
@@ -735,9 +768,12 @@ class AddonCategoryDetails(ModelViewSet):
     def retrieve(self, request, pk=None):
         data = []
         try:
-            get_add_on = AddonCategory.objects.get(id=pk)
-            serializer = AddonCategoryGetSerializer(get_add_on)
-            data.append(serializer.data)
+            try:
+                get_add_on = AddonCategory.objects.get(id=pk)
+                serializer = AddonCategoryGetSerializer(get_add_on)
+                data.append(serializer.data)
+            except:
+                pass
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
@@ -782,43 +818,109 @@ class AddonCategoryDetails(ModelViewSet):
 
 
 # addon item views CURD
-class AddonItemsEdit(ModelViewSet):
-    permission_classes = [IsAdmin, ]
-    queryset = AddonItem.objects.all()
-    serializer_class = AddonItemEditSerializer
+# class AddonItemsEdit(ModelViewSet):
+#     permission_classes = [IsAdmin, ]
+#     queryset = AddonItem.objects.all()
+#     serializer_class = AddonItemEditSerializer
 
 
-class AddonItemsGet(ModelViewSet):
+class AddonItemsDetails(ModelViewSet):
     permission_classes = [IsAdmin, ]
     queryset = AddonItem.objects.all()
     serializer_class = AddonItemGetSerializer
 
+    def list(self, request, *args, **kwargs):
+        data = []
+        try:
+            queryset = AddonItem.objects.all()
+            serializer = AddonItemGetSerializer(queryset, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PUT'])
-def addon_item_put(request, id):
-    try:
-        student = AddonItem.objects.get(id=id)
-    except AddonItem.DoesNotExist:
-        return Response("id not found")
-    if request.method == "PUT":
-        data = request.data
-        serial = AddonItemEditSerializer(student, data=data)
-        if serial.is_valid():
-            serial.save()
-            return Response({"msg": "Data Updated"})
-        else:
-            return Response(serial.errors)
+    def create(self, request, *args, **kwargs):
+        serializer = AddonItemEditSerializer(data=request.data)
+        # serializer = self.get_serializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            custom_data = {
+                "status": 200,
+                "message": "Created Successfully",
+                "data": serializer.data
+            }
+            return Response(custom_data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def partial_update(self, request, pk):
+        data = []
+        try:
+            queryset = AddonItem.objects.all()
+            add_on_item = get_object_or_404(queryset, pk=pk)
+            serializer = AddonItemEditSerializer(add_on_item, data=request.data, partial=True)
+            serializer.is_valid()
+            serializer.save()
+            custom_data = {
+                'status': True,
+                'message': 'Updated Successfully',
+                'data': serializer.data
+
+            }
+            return Response(custom_data, status=status.HTTP_202_ACCEPTED)
+        except Exception as e:
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+    def retrieve(self, request, pk=None):
+        data = []
+        try:
+            try:
+                get_add_on_item = AddonItem.objects.get(id=pk)
+                serializer = AddonCategoryGetSerializer(get_add_on_item)
+                data.append(serializer.data)
+            except:
+                pass
+            return Response(data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, *args, **kwargs):
+        data = []
+        try:
+            add_on_item = self.get_object()
+            # company.is_active = False
+            add_on_item.delete()
+            return Response(data={"status": "success", "message": "Deleted Successfully"},
+                            status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['DELETE'])
-def addon_item_delete(request, id):
-    try:
-        student = AddonItem.objects.get(id=id)
-    except AddonItem.DoesNotExist:
-        return Response("id not found")
-    if request.method == "DELETE":
-        AddonItem.objects.get(id=id).delete()
-        return Response({"msg": "Data deleted"})
+# @api_view(['PUT'])
+# def addon_item_put(request, id):
+#     try:
+#         student = AddonItem.objects.get(id=id)
+#     except AddonItem.DoesNotExist:
+#         return Response("id not found")
+#     if request.method == "PUT":
+#         data = request.data
+#         serial = AddonItemEditSerializer(student, data=data)
+#         if serial.is_valid():
+#             serial.save()
+#             return Response({"msg": "Data Updated"})
+#         else:
+#             return Response(serial.errors)
+#
+#
+# @api_view(['DELETE'])
+# def addon_item_delete(request, id):
+#     try:
+#         student = AddonItem.objects.get(id=id)
+#     except AddonItem.DoesNotExist:
+#         return Response("id not found")
+#     if request.method == "DELETE":
+#         AddonItem.objects.get(id=id).delete()
+#         return Response({"msg": "Data deleted"})
 
 
 # Standard Crud
