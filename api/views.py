@@ -915,13 +915,13 @@ class GetMenuCategory(APIView):
 class ImageLink(APIView):
     def post(self, request):
         try:
-            # host = 'https://hotel-management-live.herokuapp.com'
+            host = 'https://hotel-management-live.herokuapp.com'
             file_obj = request.FILES['image']
             print(file_obj.name)
             BASE_DIR = Path(__file__).resolve().parent.parent
             # img_extension = os.path.splitext(file_obj.name)[1]
-            # save_path = os.path.join(os.path.join(host, BASE_DIR), 'images/')
-            save_path = os.path.join(str(BASE_DIR), 'images\\')
+            save_path = os.path.join(os.path.join(host, BASE_DIR), 'images/')
+            # save_path = os.path.join(str(BASE_DIR), 'images\\')
             if not os.path.exists(save_path):
                 os.makedirs(save_path)
 
@@ -929,8 +929,8 @@ class ImageLink(APIView):
                 for chunk in file_obj.chunks():
                     file.write(chunk)
 
-            # image_link = os.path.join(host+save_path,str(file_obj.name))
-            image_link = os.path.join(save_path, str(file_obj.name))
+            image_link = os.path.join(host+save_path,str(file_obj.name))
+            # image_link = os.path.join(save_path, str(file_obj.name))
             return Response({"image_link":image_link},status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response(status=status.HTTP_400_BAD_REQUEST)
