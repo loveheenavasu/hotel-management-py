@@ -628,9 +628,12 @@ class ItemsDetails(ModelViewSet):
     def retrieve(self, request, pk=None):
         data = []
         try:
-            get_item = Items.objects.get(id=pk)
-            serializer = ItemsGetSerializer(get_item)
-            data.append(serializer.data)
+            try:
+                get_item = Items.objects.get(id=pk)
+                serializer = ItemsGetSerializer(get_item)
+                data.append(serializer.data)
+            except:
+                pass
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
@@ -921,7 +924,7 @@ class ImageLink(APIView):
             BASE_DIR = Path(__file__).resolve().parent.parent
             # img_extension = os.path.splitext(file_obj.name)[1]
             # save_path = os.path.join(os.path.join(host, BASE_DIR), 'images/')
-            save_path = os.path.join(str(BASE_DIR), 'images\\')
+            # save_path = os.path.join(str(BASE_DIR), 'images\\')
             if not os.path.exists(save_path):
                 os.makedirs(save_path)
 
