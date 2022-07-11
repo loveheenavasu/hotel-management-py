@@ -619,8 +619,14 @@ class ItemsDetails(ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         try:
-            queryset = Items.objects.all()
-            serializer = ItemsGetSerializer(queryset, many=True)
+            menu = request.query_params.get('menu')
+            menu_category = request.query_params.get('menu_category')
+            if menu and menu_category:
+                queryset = Items.objects.filter(menu_id=menu, menu_category_id=menu_category)
+                serializer = ItemsGetSerializer(queryset, many=True)
+            else:
+                queryset = Items.objects.all()
+                serializer = ItemsGetSerializer(queryset, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
@@ -1012,7 +1018,7 @@ class GetMenuCategory(APIView):
 
             menu_category = MenuCategory.objects.filter(menu_id=menu_id)
             serializer = MenuCategoryGetSerializer(menu_category, many=True)
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
+            return Response(serializer.data,status=status.HTTP_200_OK)
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
