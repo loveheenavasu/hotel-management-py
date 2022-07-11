@@ -426,10 +426,10 @@ class MenuDetails(ModelViewSet):
             try:
                 get_menu = Menu.objects.get(id=pk)
                 serializer = MenuGetSerializer(get_menu)
-                data.append(serializer.data)
+                # data.append(serializer.data)
             except:
                 pass
-            return Response(data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(data, status=status.HTTP_200_OK)
 
@@ -532,10 +532,10 @@ class MenuCategoryDetails(ModelViewSet):
             try:
                 get_menu_category = MenuCategory.objects.get(id=pk)
                 serializer = MenuCategoryGetSerializer(get_menu_category)
-                data.append(serializer.data)
+                # data.append(serializer.data)
             except:
                 pass
-            return Response(data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(data, status=status.HTTP_200_OK)
 
@@ -1062,9 +1062,13 @@ class Guest(ModelViewSet):
     serializer_class = GuestSerializer
 
     def list(self, request, *args, **kwargs):
-        queryset = Guests.objects.all()
-        serializer = GuestSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        data = []
+        try:
+            queryset = Guests.objects.all()
+            serializer = GuestSerializer(queryset, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
         serializer = GuestSerializer(data=request.data)
@@ -1107,7 +1111,7 @@ class Guest(ModelViewSet):
             data.append(serializer.data)
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response(data, status=status.HTTP_200_OK)
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, *args, **kwargs):
         data = []
