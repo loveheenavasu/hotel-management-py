@@ -68,6 +68,7 @@ class RoleSerializer(serializers.ModelSerializer):
 
 class GetUserSerializer(serializers.ModelSerializer):
     roles = RoleSerializer(read_only=True)
+
     class Meta:
         model = User
         exclude = ['password', ]
@@ -75,17 +76,17 @@ class GetUserSerializer(serializers.ModelSerializer):
 
 # company serializer
 class CompanySerializer(serializers.ModelSerializer):
-    role = RoleSerializer(read_only=True)
+    # role = RoleSerializer(read_only=True)
 
     class Meta:
         model = Company
         fields = '__all__'
 
 
-class CompanyEditSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Company
-        fields = '__all__'
+# class CompanyEditSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Company
+#         fields = '__all__'
 
 
 # addon category serializers
@@ -188,4 +189,10 @@ class RoomGetSerializer(serializers.ModelSerializer):
 class RoomEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
+        fields = '__all__'
+
+
+class GuestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Guests
         fields = '__all__'

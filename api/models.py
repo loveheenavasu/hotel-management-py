@@ -191,16 +191,20 @@ class Room(models.Model):
 
 
 class Guests(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True, blank=True)
-    name = models.CharField(max_length=100, null=True, blank=True)
+    # company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
+    # room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True, blank=True)
+    first_name = models.CharField(max_length=100, null=True, blank=True)
+    last_name = models.CharField(max_length=100, null=True, blank=True)
+    email = models.EmailField(max_length=100, null=True, blank=True)
     phone = models.IntegerField(null=True, blank=True)
     address = models.CharField(max_length=300, null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
     pincode = models.IntegerField(null=True, blank=True)
     tag_along_guests = models.CharField(max_length=100, null=True, blank=True)
-    wallet_amount = models.IntegerField(null=True, blank=True)
-    identity_proof = models.CharField(max_length=100, null=True, blank=True)
+    check_in = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    check_out = models.DateTimeField(null=True, blank=True)
+    # wallet_amount = models.IntegerField(null=True, blank=True)
+    # identity_proof = models.CharField(max_length=100, null=True, blank=True)
 
 
 class Affiliate(models.Model):

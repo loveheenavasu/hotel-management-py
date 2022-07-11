@@ -12,23 +12,24 @@ router = DefaultRouter()
 
 router.register(r'role', AssignRole, basename='role'),
 router.register(r'user/edit', UserEdit, basename='register'),
-router.register(r'user', UserGet, basename='RegisterGet'),
-router.register(r'company', Company, basename='company'),
-router.register(r'CompanyEdit', CompanyEdit, basename='CompanyEdit'),
-router.register(r'menu/edit', MenuPost, basename='menu_edit'),
-router.register(r'menu', MenuGet, basename='Menu_get'),
-router.register(r'menu/category/post', MenuCategoryPost, basename='MenuCategoryPost'),
-router.register(r'menu-category', MenuCategoryGet, basename='menu_category'),
-router.register(r'item/edit',  ItemsPost, basename='menu_item'),
-router.register(r'items', ItemsGet, basename='menu_item_get'),
-router.register(r'addon/category/edit', AddonCategoryEdit, basename='addon_category'),
-router.register(r'addon/category', AddonCategoryGet, basename='addonCategory'),
+# router.register(r'user', UserGet, basename='RegisterGet'),
+router.register(r'company', CompanyDetails, basename='company'),
+# router.register(r'CompanyEdit', CompanyEdit, basename='CompanyEdit'),
+# router.register(r'menu/edit', MenuPost, basename='menu_edit'),
+router.register(r'menu', MenuDetails, basename='Menu_get'),
+# router.register(r'menu/category/post', MenuCategoryPost, basename='MenuCategoryPost'),
+router.register(r'menu-category', MenuCategoryDetails, basename='menu_category'),
+# router.register(r'item/edit',  ItemsPost, basename='menu_item'),
+router.register(r'items', ItemsDetails, basename='menu_item_get'),
+# router.register(r'addon/category/edit', AddonCategoryEdit, basename='addon_category'),
+router.register(r'addon/category', AddonCategoryDetails, basename='addonCategory'),
 router.register(r'addon/item/edit', AddonItemsEdit, basename='addon_item_edit'),
 router.register(r'addon/item', AddonItemsGet, basename='addon_item'),
 router.register(r'standard/edit', StandardEdit, basename='standard_edit'),
 router.register(r'standard/data', StandardGet, basename='standard_data'),
 router.register(r'room/edit', RoomEdit, basename='room_edit'),
 router.register(r'room', RoomGet, basename='room'),
+router.register(r'guest', Guest, basename='guest'),
 
 
 urlpatterns = [
@@ -38,33 +39,33 @@ urlpatterns = [
      # path('api/token/',jwt_views.TokenObtainPairView.as_view(), name ='token_obtain_pair'),
      # path('api/token/refresh/',jwt_views.TokenRefreshView.as_view(),name ='token_refresh'),
      # Register CRUD
-     path('company/update/<int:id>/', views.company_put, name="update"),
-     path('company/delete/<int:id>/', views.company_delete, name="update"),
+     # path('company/update/<int:id>/', views.company_put, name="update"),
+     # path('company/delete/<int:id>/', views.company_delete, name="update"),
 
      # Company  CRUD
-     path('MenuCategory/update/<int:id>/', views.meny_category_update, name="update"),
-     path('MenuCategory/delete/<int:id>/', views.menu_category_delete, name="delete"),
+     # path('MenuCategory/update/<int:id>/', views.meny_category_update, name="update"),
+     # path('MenuCategory/delete/<int:id>/', views.menu_category_delete, name="delete"),
 
 
      # Menu CRUD
-     path('menu/update/<int:id>/', views.menu_put, name="update"),
-     path('menu/delete/<int:id>/', views.menu_delete, name="delete"),
+     # path('menu/update/<int:id>/', views.menu_put, name="update"),
+     # path('menu/delete/<int:id>/', views.menu_delete, name="delete"),
 
      # Menu Category CRUD
-     path('MenuCategory/update/<int:id>/', views.meny_category_update, name="update"),
-     path('MenuCategory/delete/<int:id>/', views.menu_category_delete, name="delete"),
+     # path('MenuCategory/update/<int:id>/', views.meny_category_update, name="update"),
+     # path('MenuCategory/delete/<int:id>/', views.menu_category_delete, name="delete"),
      path('menu_category/', GetMenuCategory.as_view(), name="menu_category"),
 
 
 
      # Item CURD
 
-     path('menu/item/update/<int:id>/', views.item_update, name="update"),
-     path('menu/item/delete/<int:id>/', views.item_delete, name="delete"),
+     # path('menu/item/update/<int:id>/', views.item_update, name="update"),
+     # path('menu/item/delete/<int:id>/', views.item_delete, name="delete"),
 
      # Addon Category CRUD
-     path('addon_category/update/<int:id>/', views.addon_category_put, name="update"),
-     path('addon_category/delete/<int:id>/', views.addon_category_item_delete, name="delete"),
+     # path('addon_category/update/<int:id>/', views.addon_category_put, name="update"),
+     # path('addon_category/delete/<int:id>/', views.addon_category_item_delete, name="delete"),
 
      # Addon Item CRUD
      path('addon_item/update/<int:id>/', views.addon_item_put, name="update"),
