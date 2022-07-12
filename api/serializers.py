@@ -3,8 +3,15 @@ from .models import *
 from .models import Company
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+# role serializers
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Role
+        fields = '__all__'
+
 
 class UserSerializerGet(serializers.ModelSerializer):
+    roles = RoleSerializer(read_only=True)
     class Meta:
         model = User
         fields = '__all__'
@@ -57,13 +64,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         token['email'] = user.email
         return token
-
-
-# role serializers
-class RoleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Role
-        fields = '__all__'
 
 
 class GetUserSerializer(serializers.ModelSerializer):

@@ -5,7 +5,7 @@ from django.contrib.postgres.fields import ArrayField
 
 class Role(models.Model):
     role_name = models.CharField(max_length=100)
-    permission = ArrayField(models.CharField(max_length=100, null=True, blank=True), default=list)
+    permission = ArrayField(models.CharField(max_length=200), blank=True, size=10)
 
 
 class UserManager(BaseUserManager):

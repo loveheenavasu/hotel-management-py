@@ -28,6 +28,20 @@ class AssignRole(ModelViewSet):
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            custom_data = {
+                "status": 200,
+                "message": "Created Successfully",
+                "data": serializer.data
+            }
+            return Response(custom_data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 # User Register Crud
 class UserEdit(ModelViewSet):
@@ -39,7 +53,7 @@ class UserEdit(ModelViewSet):
         try:
             try:
                 queryset  = User.objects.all()
-                serializer = UserSerializer(queryset, many=True)
+                serializer = UserSerializerGet(queryset, many=True)
             except:
                 pass
             return Response(serializer.data, status=status.HTTP_200_OK)
