@@ -79,7 +79,7 @@ class UserEdit(ModelViewSet):
         try:
             try:
                 get_user = User.objects.get(id=pk)
-                serializer = UserSerializer(get_user)
+                serializer = UserSerializerGet(get_user)
                 data.append(serializer.data)
             except:
                 pass

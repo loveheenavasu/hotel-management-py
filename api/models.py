@@ -5,7 +5,9 @@ from django.contrib.postgres.fields import ArrayField
 
 class Role(models.Model):
     role_name = models.CharField(max_length=100)
-    permission = ArrayField(models.CharField(max_length=200), blank=True, size=10)
+    permissions = ArrayField(models.CharField(max_length=10, blank=True, null=True), size=8)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
 
 class UserManager(BaseUserManager):
@@ -65,6 +67,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(auto_now_add=True)
     contact = models.BigIntegerField(null=True, blank=True)
     is_contact_verified = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -81,7 +85,8 @@ class Company(models.Model):
     logo = models.ImageField()
     owner = models.CharField(max_length=255, null=True, blank=True)
     subdomain = models.CharField(max_length=255, null=True, blank=True)
-    created = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
 
 class Menu(models.Model):
@@ -92,14 +97,16 @@ class Menu(models.Model):
     earnings = models.DecimalField(max_digits=10, default=0, decimal_places=2)
     item_stock = models.IntegerField(default=0)
     description = models.TextField(null=True, blank=True)
-    created = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
 
 class MenuCategory(models.Model):
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=255)
     description = models.TextField()
-    created = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
 #
 # class Sliders(models.Model):
@@ -150,13 +157,16 @@ class MenuCategory(models.Model):
 class AddonCategory(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=255)
-    created = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
 
 class AddonItem(models.Model):
     addon_category = models.ForeignKey(AddonCategory, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=255)
     price = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
 
 class Items(models.Model):
@@ -172,12 +182,16 @@ class Items(models.Model):
     is_recommended = models.BooleanField()
     is_popular = models.BooleanField()
     is_new = models.BooleanField()
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
 
 # Standard Model
 class Standard(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
 
 # Room Model
@@ -189,6 +203,8 @@ class Room(models.Model):
     standard = models.ForeignKey(Standard, on_delete=models.CASCADE, null=True, blank=True)
     room_number = models.IntegerField(null=True, blank=True)
     type = models.CharField(max_length=255, choices=Room_Choices, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
 
 class Guests(models.Model):
@@ -204,6 +220,8 @@ class Guests(models.Model):
     tag_along_guests = models.CharField(max_length=100, null=True, blank=True)
     check_in = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     check_out = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     # wallet_amount = models.IntegerField(null=True, blank=True)
     # identity_proof = models.CharField(max_length=100, null=True, blank=True)
 
@@ -226,18 +244,24 @@ class Coupon(models.Model):
     subtext = models.TextField(max_length=300, null=True, blank=True)
     type = models.CharField(max_length=100, null=True, blank=True)
     is_active = models.BooleanField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
 
 class Order(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
     coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE, null=True, blank=True)
     guest = models.CharField(max_length=100, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
     item = models.ForeignKey(Items, on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
 
 # class Room_service(models.Model):
