@@ -3,11 +3,11 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
 
-class Role(models.Model):
-    role_name = models.CharField(max_length=100)
-    permissions = ArrayField(models.CharField(max_length=10, blank=True, null=True), size=8)
-    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
+# class Role(models.Model):
+#     role_name = models.CharField(max_length=100)
+#     permissions = ArrayField(models.CharField(max_length=10, blank=True, null=True), size=8)
+#     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+#     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
 
 class UserManager(BaseUserManager):
