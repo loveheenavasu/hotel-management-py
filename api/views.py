@@ -387,16 +387,17 @@ class ItemsDetails(ModelViewSet):
         data = []
         try:
             queryset = Items.objects.all()
-            # item = get_object_or_404(queryset, pk=pk)
+            item = get_object_or_404(queryset, pk=pk)
 
-            serializer = ItemsEditSerializer(data=request.data, partial=True)
-
+            serializer = ItemsEditSerializer(item,data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
+                item_obj = Items.objects.get(id=serializer.data['id'])
+                data = ItemsGetSerializer(item_obj).data
                 context = {
                     'status': status.HTTP_202_ACCEPTED,
                     'message': 'Updated Successfully',
-                    'data': serializer.data
+                    'data': data
 
                 }
                 return Response(context, status=status.HTTP_202_ACCEPTED)
