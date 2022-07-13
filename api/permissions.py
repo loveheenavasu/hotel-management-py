@@ -7,9 +7,14 @@ class IsStaff(BasePermission):
         return bool(request.user and request.user.is_staff and is_not_super_user)
 
 
-class IsAdmin(BasePermission):
+class IsSuperUser(BasePermission):
     def has_permission(self, request, view):
         return bool(request.user and request.user.is_superuser)
+
+
+class IsAdmin(BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_admin)
 
 
 class IsUser(BasePermission):

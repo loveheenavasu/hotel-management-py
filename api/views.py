@@ -12,6 +12,7 @@ from rest_framework.views import APIView
 from datetime import datetime
 from django.core.files.storage import default_storage
 import os
+import json
 from django.shortcuts import get_object_or_404
 from pathlib import Path
 
@@ -45,7 +46,7 @@ class AssignRole(ModelViewSet):
 
 # User Register Crud
 class UserEdit(ModelViewSet):
-    # permission_classes = [AllowAny, ]
+    permission_classes = [IsAdmin, ]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -72,6 +73,9 @@ class UserEdit(ModelViewSet):
             }
             return Response(custom_data, status=status.HTTP_201_CREATED)
         except Exception as e:
+            custom_data = {
+                "message": e
+            }
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None):
@@ -119,144 +123,6 @@ class UserEdit(ModelViewSet):
         except Exception as e:
             return Response(data,status=status.HTTP_400_BAD_REQUEST)
 
-
-# class UserGet(ModelViewSet):
-#     permission_classes = [AllowAny, ]
-#     queryset = User.objects.all()
-#     serializer_class = GetUserSerializer
-#
-#     def list(self, request, *args, **kwargs):
-#         queryset  = User.objects.all()
-#         serializer = GetUserSerializer(queryset, many=True)
-#         return Response(serializer.data,status=status.HTTP_200_OK)
-#
-#     def create(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         try:
-#             serializer.is_valid(raise_exception=True)
-#             self.perform_create(serializer)
-#             custom_data = {
-#                 "status": 200,
-#                 "message": "Created Successfully",
-#                 "data": serializer.data
-#             }
-#             return Response(custom_data, status=status.HTTP_201_CREATED)
-#         except Exception as e:
-#             return Response(status=status.HTTP_400_BAD_REQUEST)
-#
-#     def retrieve(self, request, pk=None):
-#         data = []
-#         try:
-#             get_user = User.objects.get(id=pk)
-#             serializer = GetUserSerializer(get_user)
-#             data.append(serializer.data)
-#             return Response(data, status=status.HTTP_200_OK)
-#         except Exception as e:
-#             return Response(data, status=status.HTTP_200_OK)
-#
-#     def destroy(self, request, *args, **kwargs):
-#         data = []
-#         try:
-#             user = self.get_object()
-#             user.is_active = False
-#             user.delete()
-#             return Response(data={"status": "success", "message": "Deleted Successfully"},
-#                             status=status.HTTP_204_NO_CONTENT)
-#         except Exception as e:
-#             return Response(data,status=status.HTTP_400_BAD_REQUEST)
-
-
-# @api_view(['PUT'])
-# def user_update(request, id):
-#     try:
-#         student = User.objects.get(id=id)
-#     except User.DoesNotExist:
-#         return Response("id not found")
-#     if request.method == "PUT":
-#         data = request.data
-#         serial = UserSerializer(student, data=data)
-#         if serial.is_valid():
-#             serial.save()
-#             return Response({"msg": "Data Updated"})
-#         else:
-#             return Response(serial.errors)
-#
-#
-# @api_view(['DELETE'])
-# def user_delete(request, id):
-#     try:
-#         student = User.objects.get(id=id)
-#     except User.DoesNotExist as err:
-#         return Response("id not found", err)
-#     if request.method == "DELETE":
-#         User.objects.get(id=id).delete()
-#         return Response({"msg": "Data deleted"})
-
-
-# Company View
-# class CompanyEdit(ModelViewSet):
-#     permission_classes = [IsAdmin, ]
-#     queryset = Company.objects.all()
-#     serializer_class = CompanyEditSerializer
-#
-#
-#     def list(self, request, *args, **kwargs):
-#         queryset  = Company.objects.all()
-#         serializer = CompanyEditSerializer(queryset, many=True)
-#         return Response(serializer.data,status=status.HTTP_200_OK)
-#
-#     def create(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         try:
-#             serializer.is_valid(raise_exception=True)
-#             self.perform_create(serializer)
-#             custom_data = {
-#                 "status": 200,
-#                 "message": "Created Successfully",
-#                 "data": serializer.data
-#             }
-#             return Response(custom_data, status=status.HTTP_201_CREATED)
-#         except Exception as e:
-#             return Response(status=status.HTTP_400_BAD_REQUEST)
-#
-#     def retrieve(self, request, pk=None):
-#         data = []
-#         try:
-#             get_company = Company.objects.get(id=pk)
-#             serializer = CompanyEditSerializer(get_company)
-#             data.append(serializer.data)
-#             return Response(data, status=status.HTTP_200_OK)
-#         except Exception as e:
-#             return Response(data, status=status.HTTP_200_OK)
-#
-#     def update(self, request, pk):
-#         data = []
-#         try:
-#             queryset = Company.objects.all()
-#             company = get_object_or_404(queryset, pk=pk)
-#             serializer = CompanyEditSerializer(company, data=request.data)
-#             serializer.is_valid()
-#             serializer.save()
-#             custom_data = {
-#                 'status': True,
-#                 'message': 'Updated Successfully',
-#                 'data': serializer.data
-#             }
-#             return Response(custom_data, status=status.HTTP_200_OK)
-#         except Exception as e:
-#
-#             return Response(data, status=status.HTTP_400_BAD_REQUEST)
-#
-#     def destroy(self, request, *args, **kwargs):
-#         data = []
-#         try:
-#             company = self.get_object()
-#             # user.is_active = False
-#             company.delete()
-#             return Response(data={"status": "success", "message": "Deleted Successfully"},
-#                             status=status.HTTP_204_NO_CONTENT)
-#         except Exception as e:
-#             return Response(data,status=status.HTTP_400_BAD_REQUEST)
 
 class CompanyDetails(ModelViewSet):
     permission_classes = [IsAdmin, ]
@@ -325,67 +191,6 @@ class CompanyDetails(ModelViewSet):
                             status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             return Response(data,status=status.HTTP_400_BAD_REQUEST)
-
-
-# @api_view(['PUT'])
-# def company_put(request, id):
-#     try:
-#         student = Company.objects.get(id=id)
-#     except Company.DoesNotExist:
-#         return Response("id not found")
-#     if request.method == "PUT":
-#         data = request.data
-#         serial = CompanyEdit(student, data=data)
-#         if serial.is_valid():
-#             serial.save()
-#             return Response({"msg": "Data Updated"})
-#         else:
-#             return Response(serial.errors)
-
-#
-# @api_view(['DELETE'])
-# def company_delete(request, id):
-#     try:
-#         student = Company.objects.get(id=id)
-#     except Company.DoesNotExist:
-#         return Response("id not found")
-#     if request.method == "DELETE":
-#         Company.objects.get(id=id).delete()
-#         return Response({"msg": "Data deleted"})
-
-
-# def get_menuprice()
-
-
-# Menu Crud
-# class MenuPost(ModelViewSet):
-#     permission_classes = [IsAdmin, ]
-#     queryset = Menu.objects.all()
-#     serializer_class = MenuEditSerializer
-#
-#     def create(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         try:
-#             serializer.is_valid(raise_exception=True)
-#             self.perform_create(serializer)
-#             custom_data = {
-#                 "status": 200,
-#                 "message": "Created Successfully",
-#                 "data": serializer.data
-#             }
-#             return Response(custom_data, status=status.HTTP_201_CREATED)
-#         except Exception as e:
-#             return Response(status=status.HTTP_400_BAD_REQUEST)
-#
-#     def retrieve(self, request, pk=None):
-#         data = []
-#         try:
-#             get_menu = Menu.objects.get(id=pk)
-#             serializer = MenuEditSerializer(get_menu)
-#             data.append(serializer.data)
-#             return Response(data, status=status.HTTP_200_OK)
-#         except Exception as e:
-#             return Response(data, status=status.HTTP_200_OK)
 
 
 class MenuDetails(ModelViewSet):
@@ -459,41 +264,6 @@ class MenuDetails(ModelViewSet):
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-# @api_view(['PUT'])
-# def menu_put(request, id):
-#     try:
-#         student = Menu.objects.get(id=id)
-#     except Menu.DoesNotExist:
-#         return Response("id not found")
-#     if request.method == "PUT":
-#         data = request.data
-#         serial = MenuEditSerializer(student, data=data)
-#         if serial.is_valid():
-#             serial.save()
-#             return Response({"msg": "Data Updated"})
-#         else:
-#             return Response(serial.errors)
-#
-#
-# @api_view(['DELETE'])
-# def menu_delete(request, id):
-#     try:
-#         student = Menu.objects.get(id=id)
-#     except Menu.DoesNotExist:
-#         return Response("id not found")
-#     if request.method == "DELETE":
-#         Menu.objects.get(id=id).delete()
-#         return Response({"msg": "Data deleted"})
-
-
-# Menu category Curd
-# class MenuCategoryPost(ModelViewSet):
-#     permission_classes = [IsAdmin, ]
-#     queryset = MenuCategory.objects.all()
-#     serializer_class = MenuCategoryEditSerializer
-
-
 class MenuCategoryDetails(ModelViewSet):
     permission_classes = [IsAdmin, ]
     queryset = MenuCategory.objects.all()
@@ -563,67 +333,6 @@ class MenuCategoryDetails(ModelViewSet):
                             status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
-
-
-# @api_view(['PUT'])
-# def meny_category_update(request, id):
-#     try:
-#         student = MenuCategory.objects.get(id=id)
-#     except MenuCategory.DoesNotExist:
-#         return Response("id not found")
-#     if request.method == "PUT":
-#         data = request.data
-#         serial = MenuCategoryEditSerializer(student, data=data)
-#         if serial.is_valid():
-#             serial.save()
-#             return Response({"msg": "Data Updated"})
-#         else:
-#             return Response(serial.errors)
-#
-#
-# @api_view(['DELETE'])
-# def menu_category_delete(request, id):
-#     try:
-#         student = MenuCategory.objects.get(id=id)
-#     except MenuCategory.DoesNotExist:
-#         return Response("id not found")
-#     if request.method == "DELETE":
-#         MenuCategory.objects.get(id=id).delete()
-#         return Response({"msg": "Data deleted"})
-
-
-# @api_view(['PUT'])
-# def MenuCategoryPut(request, id):
-#     try:
-#         student = Menu_category.objects.get(id=id)
-#     except Menu_category.DoesNotExist:
-#         return Response("id not found")
-#     if request.method == "PUT":
-#         data = request.data
-#         serial = MenuCategoryEditSerializer(student, data=data)
-#         if serial.is_valid():
-#             serial.save()
-#             return Response({"msg": "Data Updated"})
-#         else:
-#             return Response(serial.errors)
-#
-#
-# @api_view(['DELETE'])
-# def MenuCategoryDelete(request, id):
-#     try:
-#         student = Menu_category.objects.get(id=id)
-#     except Menu_category.DoesNotExist:
-#         return Response("id not found")
-#     if request.method == "DELETE":
-#         Menu_category.objects.get(id=id).delete()
-#         return Response({"msg": "Data deleted"})
-
-
-# Menu Item CRUD
-# class ItemsPost(ModelViewSet):
-#     permission_classes = [IsAdmin, ]
-#     queryset = Items.objects.all()
-#     serializer_class = ItemsEditSerializer
 
 
 class ItemsDetails(ModelViewSet):
@@ -703,41 +412,6 @@ class ItemsDetails(ModelViewSet):
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
-# @api_view(['PUT'])
-# def item_update(request, id):
-#     try:
-#         student = Items.objects.get(id=id)
-#     except Items.DoesNotExist:
-#         return Response("id not found")
-#     if request.method == "PUT":
-#         data = request.data
-#         serial = ItemsGetSerializer(student, data=data)
-#         if serial.is_valid():
-#             serial.save()
-#             return Response({"msg": "Data Updated"})
-#         else:
-#             return Response(serial.errors)
-#
-#
-# @api_view(['DELETE'])
-# def item_delete(request, id):
-#     try:
-#         student = Items.objects.get(id=id)
-#     except Items.DoesNotExist:
-#         return Response("id not found")
-#     if request.method == "DELETE":
-#         Items.objects.get(id=id).delete()
-#         return Response({"msg": "Data deleted"})
-
-
-####
-# Addon Category crud
-# class AddonCategoryEdit(ModelViewSet):
-#     permission_classes = [IsAdmin, ]
-#     queryset = AddonCategory.objects.all()
-#     serializer_class = AddonCategoryEditSerializer
-
-
 class AddonCategoryDetails(ModelViewSet):
     permission_classes = [IsAdmin, ]
     queryset = AddonCategory.objects.all()
@@ -810,40 +484,6 @@ class AddonCategoryDetails(ModelViewSet):
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
-# @api_view(['PUT'])
-# def addon_category_put(request, id):
-#     try:
-#         student = AddonCategory.objects.get(id=id)
-#     except AddonCategory.DoesNotExist:
-#         return Response("id not found")
-#     if request.method == "PUT":
-#         data = request.data
-#         serial = AddonCategoryEditSerializer(student, data=data)
-#         if serial.is_valid():
-#             serial.save()
-#             return Response({"msg": "Data Updated"})
-#         else:
-#             return Response(serial.errors)
-#
-#
-# @api_view(['DELETE'])
-# def addon_category_item_delete(request, id):
-#     try:
-#         student = AddonCategory.objects.get(id=id)
-#     except AddonCategory.DoesNotExist:
-#         return Response("id not found")
-#     if request.method == "DELETE":
-#         AddonCategory.objects.get(id=id).delete()
-#         return Response({"msg": "Data deleted"})
-
-
-# addon item views CURD
-# class AddonItemsEdit(ModelViewSet):
-#     permission_classes = [IsAdmin, ]
-#     queryset = AddonItem.objects.all()
-#     serializer_class = AddonItemEditSerializer
-
-
 class AddonItemsDetails(ModelViewSet):
     permission_classes = [IsAdmin, ]
     queryset = AddonItem.objects.all()
@@ -914,33 +554,6 @@ class AddonItemsDetails(ModelViewSet):
                             status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
-
-
-# @api_view(['PUT'])
-# def addon_item_put(request, id):
-#     try:
-#         student = AddonItem.objects.get(id=id)
-#     except AddonItem.DoesNotExist:
-#         return Response("id not found")
-#     if request.method == "PUT":
-#         data = request.data
-#         serial = AddonItemEditSerializer(student, data=data)
-#         if serial.is_valid():
-#             serial.save()
-#             return Response({"msg": "Data Updated"})
-#         else:
-#             return Response(serial.errors)
-#
-#
-# @api_view(['DELETE'])
-# def addon_item_delete(request, id):
-#     try:
-#         student = AddonItem.objects.get(id=id)
-#     except AddonItem.DoesNotExist:
-#         return Response("id not found")
-#     if request.method == "DELETE":
-#         AddonItem.objects.get(id=id).delete()
-#         return Response({"msg": "Data deleted"})
 
 
 # Standard Crud
@@ -1059,15 +672,6 @@ class ImageLink(APIView):
             return Response({"image_link":image_link},status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        # with default_storage.open(filename, 'wb+') as destination:
-        #     for chunk in file_obj.chunks():
-        #         destination.write(chunk)
-
-        # # Create image save path with title
-        # img_save_path = os.path.join(save_path,file_obj)
-        # img_save_path = img_save_path.replace('/','\\')
-        # cv2.imwrite(img_save_path)
 
 
 class Guest(ModelViewSet):
