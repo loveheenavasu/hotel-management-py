@@ -32,16 +32,28 @@ class AssignRole(ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         try:
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-            custom_data = {
-                "status": 200,
-                "message": "Created Successfully",
-                "data": serializer.data
+            if serializer.is_valid(raise_exception=True):
+                self.perform_create(serializer)
+                context = {
+                    "status": status.HTTP_201_CREATED,
+                    "message": "Created Successfully",
+                    "data": serializer.data
+                }
+                return Response(context, status=status.HTTP_201_CREATED)
+            else:
+                context = {
+                    "status": status.HTTP_202_ACCEPTED,
+                    "message": "Unsuccessful",
+                    "data": serializer.errors
+                }
+                return Response(context, status=status.HTTP_202_ACCEPTED)
+
+        except Exception as error:
+            context = {
+                "status": status.HTTP_400_BAD_REQUEST,
+                "message": error.__dict__
             }
-            return Response(custom_data, status=status.HTTP_201_CREATED)
-        except Exception as e:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
 
 # User Register Crud
