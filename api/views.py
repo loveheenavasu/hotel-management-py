@@ -355,15 +355,17 @@ class ItemsDetails(ModelViewSet):
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
-        serializer = ItemsGetSerializer(data=request.data)
+        serializer = ItemsEditSerializer(data=request.data)
         # serializer = self.get_serializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
+            item_obj = Items.objects.get(id=serializer.data['id'])
+            data = ItemsGetSerializer(item_obj)
             custom_data = {
                 "status": 200,
                 "message": "Created Successfully",
-                "data": serializer.data
+                "data": data.data
             }
             return Response(custom_data, status=status.HTTP_201_CREATED)
         except Exception as e:
