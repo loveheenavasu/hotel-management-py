@@ -387,19 +387,35 @@ class ItemsDetails(ModelViewSet):
         data = []
         try:
             queryset = Items.objects.all()
-            item = get_object_or_404(queryset, pk=pk)
-            serializer = ItemsGetSerializer(item, data=request.data, partial=True)
-            serializer.is_valid()
-            serializer.save()
-            custom_data = {
-                'status': True,
-                'message': 'Updated Successfully',
-                'data': serializer.data
+            # item = get_object_or_404(queryset, pk=pk)
 
+            serializer = ItemsEditSerializer(data=request.data, partial=True)
+
+            if serializer.is_valid():
+                serializer.save()
+                context = {
+                    'status': status.HTTP_202_ACCEPTED,
+                    'message': 'Updated Successfully',
+                    'data': serializer.data
+
+                }
+                return Response(context, status=status.HTTP_202_ACCEPTED)
+            else:
+                context = {
+                    'status': status.HTTP_202_ACCEPTED,
+                    'message': 'Unsuccessfully',
+                    'data': serializer.errors
+
+                }
+                return Response(context, status=status.HTTP_202_ACCEPTED)
+        except Exception as error:
+            print(error)
+            context = {
+                'status': status.HTTP_400_BAD_REQUEST,
+                'message': "Unsuccessfully",
+                'error': error.__dict__
             }
-            return Response(custom_data, status=status.HTTP_202_ACCEPTED)
-        except Exception as e:
-            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+            return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None):
         data = []
