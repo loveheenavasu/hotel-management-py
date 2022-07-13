@@ -104,7 +104,7 @@ class Menu(models.Model):
 class MenuCategory(models.Model):
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
