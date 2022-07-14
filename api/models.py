@@ -91,7 +91,7 @@ class Company(models.Model):
 
 class Menu(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     image = models.ImageField()
     time_scheduling = models.BooleanField()
     earnings = models.DecimalField(max_digits=10, default=0, decimal_places=2)
