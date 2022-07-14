@@ -115,8 +115,7 @@ class AddonItemEditSerializer(serializers.ModelSerializer):
 
 
 class AddonItemGetSerializer(serializers.ModelSerializer):
-    addonCategory = AddonCategoryGetSerializer(read_only=True)
-
+    addon_category = AddonCategoryGetSerializer(read_only=True)
     class Meta:
         model = AddonItem
         fields = '__all__'
