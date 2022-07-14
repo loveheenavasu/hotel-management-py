@@ -69,10 +69,10 @@ class UserEdit(ModelViewSet):
         try:
             queryset = User.objects.all()
             serializer = UserSerializer(queryset, many=True)
-            data.append(serializer.data)
+            # data.append(serializer.data)
             context = {
                 "status": status.HTTP_200_OK,
-                "message": data
+                "message": serializer.data
             }
             # return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as error:
@@ -134,7 +134,7 @@ class UserEdit(ModelViewSet):
                     return Response(context, status=context.get("status"))
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -152,15 +152,15 @@ class UserEdit(ModelViewSet):
             try:
                 get_user = User.objects.get(id=pk)
                 serializer = UserSerializer(get_user)
-                data.append(serializer.data)
+                # data.append(serializer.data)
                 context = {
                     "status": status.HTTP_200_OK,
-                    "message": data
+                    "message": serializer.data
                 }
                 # return Response(data, status=status.HTTP_200_OK)
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -184,7 +184,7 @@ class UserEdit(ModelViewSet):
                 # return Response(data=context,status=context.get("status"))
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -206,10 +206,10 @@ class CompanyDetails(ModelViewSet):
         try:
             queryset = Company.objects.all()
             serializer = CompanySerializer(queryset, many=True)
-            data.append(serializer.data)
+            # data.append(serializer.data)
             context = {
                 "status": status.HTTP_200_OK,
-                "message": data
+                "message": serializer.data
             }
             # return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as error:
@@ -271,7 +271,7 @@ class CompanyDetails(ModelViewSet):
                     return Response(context, status=context.get("status"))
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -289,15 +289,15 @@ class CompanyDetails(ModelViewSet):
             try:
                 get_company = Company.objects.get(id=pk)
                 serializer = CompanySerializer(get_company)
-                data.append(serializer.data)
+                # data.append(serializer.data)
                 context = {
                     "status": status.HTTP_200_OK,
-                    "message": data
+                    "message": serializer.data
                 }
                 # return Response(data, status=status.HTTP_200_OK)
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -321,7 +321,7 @@ class CompanyDetails(ModelViewSet):
                 # return Response(data=context,status=context.get("status"))
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -343,10 +343,10 @@ class MenuDetails(ModelViewSet):
         try:
             queryset = Menu.objects.all()
             serializer = MenuGetSerializer(queryset, many=True)
-            data.append(serializer.data)
+            # data.append(serializer.data)
             context = {
                 "status": status.HTTP_200_OK,
-                "message": data
+                "message": serializer.data
             }
             # return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as error:
@@ -404,7 +404,7 @@ class MenuDetails(ModelViewSet):
                     return Response(context, status=context.get("status"))
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -422,15 +422,15 @@ class MenuDetails(ModelViewSet):
             try:
                 get_menu = Menu.objects.get(id=pk)
                 serializer = MenuGetSerializer(get_menu)
-                data.append(serializer.data)
+                # data.append(serializer.data)
                 context = {
                     "status": status.HTTP_200_OK,
-                    "message": data
+                    "message": serializer.data
                 }
                 # return Response(data, status=status.HTTP_200_OK)
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -454,7 +454,7 @@ class MenuDetails(ModelViewSet):
                 # return Response(data=context,status=context.get("status"))
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -476,10 +476,10 @@ class MenuCategoryDetails(ModelViewSet):
         try:
             queryset = MenuCategory.objects.all()
             serializer = MenuCategoryGetSerializer(queryset, many=True)
-            data.append(serializer.data)
+            # data.append(serializer.data)
             context = {
                 "status": status.HTTP_200_OK,
-                "message": data
+                "message": serializer.data
             }
             # return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as error:
@@ -539,7 +539,7 @@ class MenuCategoryDetails(ModelViewSet):
                     return Response(context, status=context.get("status"))
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -557,15 +557,15 @@ class MenuCategoryDetails(ModelViewSet):
             try:
                 get_category = MenuCategory.objects.get(id=pk)
                 serializer = MenuCategoryGetSerializer(get_category)
-                data.append(serializer.data)
+                # data.append(serializer.data)
                 context = {
                     "status": status.HTTP_200_OK,
-                    "message": data
+                    "message": serializer.data
                 }
                 # return Response(data, status=status.HTTP_200_OK)
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -589,7 +589,7 @@ class MenuCategoryDetails(ModelViewSet):
                 # return Response(data=context,status=context.get("status"))
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -611,10 +611,10 @@ class ItemsDetails(ModelViewSet):
         try:
             queryset = Items.objects.all()
             serializer = ItemsGetSerializer(queryset, many=True)
-            data.append(serializer.data)
+            # data.append(serializer.data)
             context = {
                 "status": status.HTTP_200_OK,
-                "message": data
+                "message": serializer.data
             }
             # return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as error:
@@ -674,7 +674,7 @@ class ItemsDetails(ModelViewSet):
                     return Response(context, status=context.get("status"))
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -692,15 +692,15 @@ class ItemsDetails(ModelViewSet):
             try:
                 get_items = Items.objects.get(id=pk)
                 serializer = ItemsGetSerializer(get_items)
-                data.append(serializer.data)
+                # data.append(serializer.data)
                 context = {
                     "status": status.HTTP_200_OK,
-                    "message": data
+                    "message": serializer.data
                 }
                 # return Response(data, status=status.HTTP_200_OK)
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -724,7 +724,7 @@ class ItemsDetails(ModelViewSet):
                 # return Response(data=context,status=context.get("status"))
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -746,10 +746,10 @@ class AddonCategoryDetails(ModelViewSet):
         try:
             queryset = AddonCategory.objects.all()
             serializer = AddonCategoryGetSerializer(queryset, many=True)
-            data.append(serializer.data)
+            # data.append(serializer.data)
             context = {
                 "status": status.HTTP_200_OK,
-                "message": data
+                "message": serializer.data
             }
             # return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as error:
@@ -807,7 +807,7 @@ class AddonCategoryDetails(ModelViewSet):
                     return Response(context, status=context.get("status"))
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -825,15 +825,15 @@ class AddonCategoryDetails(ModelViewSet):
             try:
                 get_addon_category = AddonCategory.objects.get(id=pk)
                 serializer = AddonCategoryGetSerializer(get_addon_category)
-                data.append(serializer.data)
+                # data.append(serializer.data)
                 context = {
                     "status": status.HTTP_200_OK,
-                    "message": data
+                    "message": serializer.data
                 }
                 # return Response(data, status=status.HTTP_200_OK)
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -857,7 +857,7 @@ class AddonCategoryDetails(ModelViewSet):
                 # return Response(data=context,status=context.get("status"))
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -879,10 +879,10 @@ class AddonItemsDetails(ModelViewSet):
         try:
             queryset = AddonItem.objects.all()
             serializer = AddonItemGetSerializer(queryset, many=True)
-            data.append(serializer.data)
+            # data.append(serializer.data)
             context = {
                 "status": status.HTTP_200_OK,
-                "message": data
+                "message": serializer.data
             }
             # return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as error:
@@ -945,7 +945,7 @@ class AddonItemsDetails(ModelViewSet):
                     return Response(context, status=context.get("status"))
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -963,15 +963,15 @@ class AddonItemsDetails(ModelViewSet):
             try:
                 get_addon_item = AddonItem.objects.get(id=pk)
                 serializer = AddonItemGetSerializer(get_addon_item)
-                data.append(serializer.data)
+                # data.append(serializer.data)
                 context = {
                     "status": status.HTTP_200_OK,
-                    "message": data
+                    "message": serializer.data
                 }
                 # return Response(data, status=status.HTTP_200_OK)
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -995,7 +995,7 @@ class AddonItemsDetails(ModelViewSet):
                 # return Response(data=context,status=context.get("status"))
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -1144,10 +1144,10 @@ class Guest(ModelViewSet):
         try:
             queryset = Guests.objects.all()
             serializer = GuestSerializer(queryset, many=True)
-            data.append(serializer.data)
+            # data.append(serializer.data)
             context = {
                 "status": status.HTTP_200_OK,
-                "message": data
+                "message": serializer.data
             }
             # return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as error:
@@ -1205,7 +1205,7 @@ class Guest(ModelViewSet):
                     return Response(context, status=context.get("status"))
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -1223,15 +1223,15 @@ class Guest(ModelViewSet):
             try:
                 get_guest = Guests.objects.get(id=pk)
                 serializer = GuestSerializer(get_guest)
-                data.append(serializer.data)
+                # data.append(serializer.data)
                 context = {
                     "status": status.HTTP_200_OK,
-                    "message": data
+                    "message": serializer.data
                 }
                 # return Response(data, status=status.HTTP_200_OK)
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
@@ -1255,7 +1255,7 @@ class Guest(ModelViewSet):
                 # return Response(data=context,status=context.get("status"))
             except Exception as error:
                 context = {
-                    "status": status.HTTP_200_OK,
+                    "status": status.HTTP_404_NOT_FOUND,
                     "message": "Does not exists."
                 }
                 # return Response(context, status=context.get('status'))
