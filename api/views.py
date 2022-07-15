@@ -29,11 +29,14 @@ def custom_response(status, data=[], message=""):
             "data": data
         }
     elif status == 400 or status == 202:
-        error_list = list()
-        for i,j in data.items():
-            j = "".join(j)
-            message = f"{i}: {j}"
-            error_list.append(message)
+        if isinstance(data,str):
+            message = data
+        else:
+            error_list = list()
+            for i,j in data.items():
+                j = "".join(j)
+                message = f"{i}: {j}"
+                error_list.append(message)
         context = {
             "status": status,
             "message": ", ".join(error_list),
@@ -269,7 +272,7 @@ class MenuDetails(ModelViewSet):
         except Exception as error:
             context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
 
-        return JsonResponse(context, safe=False)
+        return JsonResponse(context, safe=False, status=context.get("status"))
 
     def partial_update(self, request, pk):
         data = []
@@ -416,7 +419,9 @@ class ItemsDetails(ModelViewSet):
             menu = request.query_params.get("menu")
             menu_category = request.query_params.get("menu_category")
             if not menu or not menu_category:
-                context = custom_response(status.HTTP_404_NOT_FOUND)
+                queryset = Items.objects.all()
+                serializer = ItemsGetSerializer(queryset, many=True)
+                context = custom_response(status.HTTP_200_OK, serializer.data, message="Fetched successfully.")
             elif menu and menu_category:
                 queryset = Items.objects.filter(menu=menu,menu_category=menu_category)
                 if queryset.count() != 0:
@@ -425,7 +430,7 @@ class ItemsDetails(ModelViewSet):
                 else:
                     context = custom_response(status.HTTP_404_NOT_FOUND)
             else:
-                queryset = Items.objects.all()
+
                 serializer = ItemsGetSerializer(queryset, many=True)
                 context = custom_response(status.HTTP_200_OK, serializer.data, message="Fetched successfully.")
         except Exception as error:
