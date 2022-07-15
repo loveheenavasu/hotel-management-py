@@ -19,6 +19,39 @@ from django.shortcuts import get_object_or_404
 from pathlib import Path
 
 
+def custom_response(status, data=[], message=""):
+    if status == 404:
+        context = {
+            "status": status,
+            "message": "Data not found.",
+            "data": data
+        }
+    elif status == 400 or status == 202:
+        error_list = list()
+        for i,j in data.items():
+            j = "".join(j)
+            message = f"{i}: {j}"
+            error_list.append(message)
+        context = {
+            "status": status,
+            "message": ", ".join(error_list),
+            "data": []
+        }
+    # elif status==202:
+    #     context = {
+    #         "status": status,
+    #         "message": data,
+    #         "data": []
+    #     }
+    else:
+        context = {
+            "status": status,
+            "message": message,
+            "data": data
+        }
+    return context
+
+
 # Token authentication
 class MyTokenObtainPairView(TokenObtainPairView):
     permission_classes = (AllowAny,)
@@ -37,25 +70,12 @@ class AssignRole(ModelViewSet):
             serializer = RoleSerializer(data=request.data)
             if serializer.is_valid(raise_exception=True):
                 self.perform_create(serializer)
-                context = {
-                    "status": status.HTTP_201_CREATED,
-                    "message": "Created Successfully.",
-                    "data": serializer.data
-                }
-                # return Response(context, status=status.HTTP_201_CREATED)
+                context = custom_response(status.HTTP_201_CREATED, serializer.data,  "Created Successfully.")
             else:
-                context = {
-                    "status": status.HTTP_202_ACCEPTED,
-                    "message": "Unsuccessful",
-                    "data": serializer.errors
-                }
+                context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors,  "Unsuccessful.")
         except Exception as error:
-            print(error)
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
-        return JsonResponse(context, safe=False)
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+        return JsonResponse(context, safe=False, status=context.get("status"))
 
 
 # User Register Crud
@@ -69,17 +89,9 @@ class UserEdit(ModelViewSet):
         try:
             queryset = User.objects.all()
             serializer = UserSerializer(queryset, many=True)
-            # data.append(serializer.data)
-            context = {
-                "status": status.HTTP_200_OK,
-                "message": serializer.data
-            }
-            # return Response(serializer.data, status=status.HTTP_200_OK)
+            context = custom_response(status.HTTP_200_OK, serializer.data, "Fetched Successfully.")
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, safe=False, status=context.get("status"))
 
     def create(self, request, *args, **kwargs):
@@ -90,24 +102,11 @@ class UserEdit(ModelViewSet):
                 self.perform_create(serializer)
                 user_obj = User.objects.get(id=serializer.data["id"])
                 serializer = UserSerializer(user_obj)
-                context = {
-                    "status": status.HTTP_201_CREATED,
-                    "message": "Created Successfully.",
-                    "data": serializer.data
-                }
-                # return Response(context, status=status.HTTP_201_CREATED)
+                context = custom_response(status.HTTP_201_CREATED, serializer.data, "Created Successfully.")
             else:
-                context = {
-                    "status": status.HTTP_202_ACCEPTED,
-                    "message": "Unsuccessful",
-                    "data": serializer.errors
-                }
+                context = custom_response(status.HTTP_400_BAD_REQUEST, serializer.errors, "Unsuccessful.")
         except Exception as error:
-            print(error)
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, safe=False)
 
     def partial_update(self, request, pk):
@@ -121,28 +120,13 @@ class UserEdit(ModelViewSet):
                     serializer.save()
                     user_obj = User.objects.get(id=serializer.data["id"])
                     serializer = UserSerializer(user_obj)
-                    context = {
-                        'status': status.HTTP_200_OK,
-                        'message': serializer.data,
-                    }
-                    return Response(context, status=context.get("status"))
+                    context = custom_response(status.HTTP_200_OK, serializer.data, "Updated Successfully.")
                 else:
-                    context = {
-                        'status': status.HTTP_202_ACCEPTED,
-                        'message': serializer.errors,
-                    }
-                    return Response(context, status=context.get("status"))
+                    context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, "Unsuccessful.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return Response(context, status=context.get("status"))
 
     def retrieve(self, request, pk=None):
@@ -152,23 +136,11 @@ class UserEdit(ModelViewSet):
             try:
                 get_user = User.objects.get(id=pk)
                 serializer = UserSerializer(get_user)
-                # data.append(serializer.data)
-                context = {
-                    "status": status.HTTP_200_OK,
-                    "message": serializer.data
-                }
-                # return Response(data, status=status.HTTP_200_OK)
+                context = custom_response(status.HTTP_200_OK, serializer.data, "Fetched Successfully.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, status=context.get("status"), safe=False)
 
     def destroy(self, request, *args, **kwargs):
@@ -177,22 +149,11 @@ class UserEdit(ModelViewSet):
             try:
                 user = self.get_object()
                 user.delete()
-                context = {
-                    "status": status.HTTP_400_BAD_REQUEST,
-                    "message": "Deleted Successfully"
-                }
-                # return Response(data=context,status=context.get("status"))
+                context = custom_response(status.HTTP_200_OK, message="Deleted Successfully")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error),
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, status=context.get('status'), safe=False)
 
 
@@ -206,17 +167,9 @@ class CompanyDetails(ModelViewSet):
         try:
             queryset = Company.objects.all()
             serializer = CompanySerializer(queryset, many=True)
-            # data.append(serializer.data)
-            context = {
-                "status": status.HTTP_200_OK,
-                "message": serializer.data
-            }
-            # return Response(serializer.data, status=status.HTTP_200_OK)
+            context = custom_response(status.HTTP_200_OK, serializer.data, message="Fetched Successfully")
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, safe=False, status=context.get("status"))
 
     def create(self, request, *args, **kwargs):
@@ -227,24 +180,11 @@ class CompanyDetails(ModelViewSet):
                 self.perform_create(serializer)
                 company_obj = Company.objects.get(id=serializer.data["id"])
                 serializer = CompanySerializer(company_obj)
-                context = {
-                    "status": status.HTTP_201_CREATED,
-                    "message": "Created Successfully.",
-                    "data": serializer.data
-                }
-                # return Response(context, status=status.HTTP_201_CREATED)
+                context = custom_response(status.HTTP_201_CREATED, serializer.data, message="Created Successfully.")
             else:
-                context = {
-                    "status": status.HTTP_202_ACCEPTED,
-                    "message": "Unsuccessful",
-                    "data": serializer.errors
-                }
+                context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
         except Exception as error:
-            print(error)
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, safe=False)
 
     def partial_update(self, request, pk):
@@ -258,28 +198,15 @@ class CompanyDetails(ModelViewSet):
                     serializer.save()
                     company_obj = Company.objects.get(id=serializer.data["id"])
                     serializer = CompanySerializer(company_obj)
-                    context = {
-                        'status': status.HTTP_200_OK,
-                        'message': serializer.data,
-                    }
+                    context = custom_response(status.HTTP_200_OK, serializer.data, message="Updated Successfully.")
                     return Response(context, status=context.get("status"))
                 else:
-                    context = {
-                        'status': status.HTTP_202_ACCEPTED,
-                        'message': serializer.errors,
-                    }
+                    context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
                     return Response(context, status=context.get("status"))
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return Response(context, status=context.get("status"))
 
     def retrieve(self, request, pk=None):
@@ -289,23 +216,11 @@ class CompanyDetails(ModelViewSet):
             try:
                 get_company = Company.objects.get(id=pk)
                 serializer = CompanySerializer(get_company)
-                # data.append(serializer.data)
-                context = {
-                    "status": status.HTTP_200_OK,
-                    "message": serializer.data
-                }
-                # return Response(data, status=status.HTTP_200_OK)
+                context = custom_response(status.HTTP_200_OK, serializer.data, "Fetched Successfully.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, status=context.get("status"), safe=False)
 
     def destroy(self, request, *args, **kwargs):
@@ -314,22 +229,12 @@ class CompanyDetails(ModelViewSet):
             try:
                 company = self.get_object()
                 company.delete()
-                context = {
-                    "status": status.HTTP_200_OK,
-                    "message": "Deleted Successfully"
-                }
-                # return Response(data=context,status=context.get("status"))
+                context = custom_response(status.HTTP_200_OK, message="Deleted Successfully.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error),
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+
         return JsonResponse(context, status=context.get('status'), safe=False)
 
 
@@ -343,17 +248,9 @@ class MenuDetails(ModelViewSet):
         try:
             queryset = Menu.objects.all()
             serializer = MenuGetSerializer(queryset, many=True)
-            # data.append(serializer.data)
-            context = {
-                "status": status.HTTP_200_OK,
-                "message": serializer.data
-            }
-            # return Response(serializer.data, status=status.HTTP_200_OK)
+            context = custom_response(status.HTTP_200_OK, serializer.data, message="Fetched Successfully")
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, safe=False, status=context.get("status"))
 
     def create(self, request, *args, **kwargs):
@@ -364,22 +261,12 @@ class MenuDetails(ModelViewSet):
                 self.perform_create(serializer)
                 menu_obj = Menu.objects.get(id=serializer.data["id"])
                 serializer = MenuGetSerializer(menu_obj)
-                context = {
-                    "status": status.HTTP_201_CREATED,
-                    "message": serializer.data
-                }
-                # return Response(context, status=status.HTTP_201_CREATED)
+                context = custom_response(status.HTTP_201_CREATED, serializer.data, message="Created Successfully.")
             else:
-                context = {
-                    "status": status.HTTP_202_ACCEPTED,
-                    "message": serializer.errors
-                }
+                context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
         except Exception as error:
-            print(error)
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+
         return JsonResponse(context, safe=False)
 
     def partial_update(self, request, pk):
@@ -388,31 +275,20 @@ class MenuDetails(ModelViewSet):
             try:
                 queryset = Menu.objects.all()
                 menu = get_object_or_404(queryset, pk=pk)
-                serializer = MenuGetSerializer(menu, data=request.data, partial=True)
+                serializer = MenuEditSerializer(menu, data=request.data, partial=True)
                 if serializer.is_valid():
                     serializer.save()
-                    context = {
-                        'status': status.HTTP_200_OK,
-                        'message': serializer.data,
-                    }
-                    return Response(context, status=context.get("status"))
+                    menu_obj = Menu.objects.get(id=serializer.data["id"])
+                    serializer = MenuGetSerializer(menu_obj)
+                    context = custom_response(status.HTTP_200_OK, serializer.data, message="Updated Successfully.")
                 else:
-                    context = {
-                        'status': status.HTTP_202_ACCEPTED,
-                        'message': serializer.errors,
-                    }
+                    context = custom_response(status.HTTP_400_BAD_REQUEST, serializer.errors, message="Unsuccessful.")
                     return Response(context, status=context.get("status"))
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+
         return Response(context, status=context.get("status"))
 
     def retrieve(self, request, pk=None):
@@ -422,23 +298,12 @@ class MenuDetails(ModelViewSet):
             try:
                 get_menu = Menu.objects.get(id=pk)
                 serializer = MenuGetSerializer(get_menu)
-                # data.append(serializer.data)
-                context = {
-                    "status": status.HTTP_200_OK,
-                    "message": serializer.data
-                }
-                # return Response(data, status=status.HTTP_200_OK)
+                context = custom_response(status.HTTP_200_OK, serializer.data, "Fetched Successfully.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+
         return JsonResponse(context, status=context.get("status"), safe=False)
 
     def destroy(self, request, *args, **kwargs):
@@ -447,22 +312,12 @@ class MenuDetails(ModelViewSet):
             try:
                 menu = self.get_object()
                 menu.delete()
-                context = {
-                    "status": status.HTTP_400_BAD_REQUEST,
-                    "message": "Deleted Successfully"
-                }
-                # return Response(data=context,status=context.get("status"))
+                context = custom_response(status.HTTP_200_OK, message="Deleted Successfully.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error),
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+
         return JsonResponse(context, status=context.get('status'), safe=False)
 
 
@@ -476,17 +331,9 @@ class MenuCategoryDetails(ModelViewSet):
         try:
             queryset = MenuCategory.objects.all()
             serializer = MenuCategoryGetSerializer(queryset, many=True)
-            # data.append(serializer.data)
-            context = {
-                "status": status.HTTP_200_OK,
-                "message": serializer.data
-            }
-            # return Response(serializer.data, status=status.HTTP_200_OK)
+            context = custom_response(status.HTTP_200_OK, serializer.data, message="Fetched successfully.")
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, safe=False, status=context.get("status"))
 
     def create(self, request, *args, **kwargs):
@@ -497,23 +344,13 @@ class MenuCategoryDetails(ModelViewSet):
                 self.perform_create(serializer)
                 menu_category_obj = MenuCategory.objects.get(id=serializer.data['id'])
                 serializer = MenuCategoryGetSerializer(menu_category_obj)
-                context = {
-                    "status": status.HTTP_201_CREATED,
-                    "message": serializer.data
-                }
-                # return Response(context, status=status.HTTP_201_CREATED)
+                context = custom_response(status.HTTP_201_CREATED, serializer.data, message="Created Successfully.")
             else:
-                context = {
-                    "status": status.HTTP_202_ACCEPTED,
-                    "message": serializer.errors
-                }
+                context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessfully.")
         except Exception as error:
-            print(error)
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
-        return JsonResponse(context, safe=False)
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+
+        return JsonResponse(context, safe=False, status=context.get('status'))
 
     def partial_update(self, request, pk):
         data = []
@@ -526,28 +363,14 @@ class MenuCategoryDetails(ModelViewSet):
                     serializer.save()
                     menu_category_obj = MenuCategory.objects.get(id=serializer.data['id'])
                     serializer = MenuCategoryGetSerializer(menu_category_obj)
-                    context = {
-                        'status': status.HTTP_200_OK,
-                        'message': serializer.data,
-                    }
-                    return Response(context, status=context.get("status"))
+                    context = custom_response(status.HTTP_200_OK, serializer.data, message="Updated successfully.")
                 else:
-                    context = {
-                        'status': status.HTTP_202_ACCEPTED,
-                        'message': serializer.errors,
-                    }
-                    return Response(context, status=context.get("status"))
+                    context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+
         return Response(context, status=context.get("status"))
 
     def retrieve(self, request, pk=None):
@@ -557,23 +380,12 @@ class MenuCategoryDetails(ModelViewSet):
             try:
                 get_category = MenuCategory.objects.get(id=pk)
                 serializer = MenuCategoryGetSerializer(get_category)
-                # data.append(serializer.data)
-                context = {
-                    "status": status.HTTP_200_OK,
-                    "message": serializer.data
-                }
-                # return Response(data, status=status.HTTP_200_OK)
+                context = custom_response(status.HTTP_200_OK, serializer.data, "Fetched Successfully.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+
         return JsonResponse(context, status=context.get("status"), safe=False)
 
     def destroy(self, request, *args, **kwargs):
@@ -582,22 +394,12 @@ class MenuCategoryDetails(ModelViewSet):
             try:
                 menu_category = self.get_object()
                 menu_category.delete()
-                context = {
-                    "status": status.HTTP_400_BAD_REQUEST,
-                    "message": "Deleted Successfully"
-                }
-                # return Response(data=context,status=context.get("status"))
+                context = custom_response(status.HTTP_200_OK, message="Deleted successfully.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error),
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+
         return JsonResponse(context, status=context.get('status'), safe=False)
 
 
@@ -612,16 +414,9 @@ class ItemsDetails(ModelViewSet):
             queryset = Items.objects.all()
             serializer = ItemsGetSerializer(queryset, many=True)
             # data.append(serializer.data)
-            context = {
-                "status": status.HTTP_200_OK,
-                "message": serializer.data
-            }
-            # return Response(serializer.data, status=status.HTTP_200_OK)
+            context = custom_response(status.HTTP_200_OK, serializer.data, message="Fetched successfully.")
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, safe=False, status=context.get("status"))
 
     def create(self, request, *args, **kwargs):
@@ -632,22 +427,12 @@ class ItemsDetails(ModelViewSet):
                 self.perform_create(serializer)
                 item_obj = Items.objects.get(id=serializer.data['id'])
                 serializer = ItemsGetSerializer(item_obj)
-                context = {
-                    "status": status.HTTP_201_CREATED,
-                    "message": serializer.data
-                }
-                # return Response(context, status=status.HTTP_201_CREATED)
+                context = custom_response(status.HTTP_201_CREATED, serializer.data, message="Created Successfully.")
             else:
-                context = {
-                    "status": status.HTTP_202_ACCEPTED,
-                    "message": serializer.errors
-                }
+                context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
         except Exception as error:
-            print(error)
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+
         return JsonResponse(context, safe=False)
 
     def partial_update(self, request, pk):
@@ -661,28 +446,15 @@ class ItemsDetails(ModelViewSet):
                     serializer.save()
                     item_obj = Items.objects.get(id=serializer.data['id'])
                     serializer = ItemsGetSerializer(item_obj)
-                    context = {
-                        'status': status.HTTP_200_OK,
-                        'message': serializer.data,
-                    }
+                    context = custom_response(status.HTTP_200_OK, serializer.data, message="Updated Successfully.")
                     return Response(context, status=context.get("status"))
                 else:
-                    context = {
-                        'status': status.HTTP_202_ACCEPTED,
-                        'message': serializer.errors,
-                    }
+                    context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
                     return Response(context, status=context.get("status"))
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return Response(context, status=context.get("status"))
 
     def retrieve(self, request, pk=None):
@@ -692,23 +464,12 @@ class ItemsDetails(ModelViewSet):
             try:
                 get_items = Items.objects.get(id=pk)
                 serializer = ItemsGetSerializer(get_items)
-                # data.append(serializer.data)
-                context = {
-                    "status": status.HTTP_200_OK,
-                    "message": serializer.data
-                }
-                # return Response(data, status=status.HTTP_200_OK)
+                context = custom_response(status.HTTP_200_OK, serializer.data, "Fetched Successfully.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+
         return JsonResponse(context, status=context.get("status"), safe=False)
 
     def destroy(self, request, *args, **kwargs):
@@ -717,22 +478,12 @@ class ItemsDetails(ModelViewSet):
             try:
                 item = self.get_object()
                 item.delete()
-                context = {
-                    "status": status.HTTP_400_BAD_REQUEST,
-                    "message": "Deleted Successfully"
-                }
-                # return Response(data=context,status=context.get("status"))
+                context = custom_response(status.HTTP_200_OK, message="Deleted Successfully.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error),
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+
         return JsonResponse(context, status=context.get('status'), safe=False)
 
 
@@ -746,17 +497,10 @@ class AddonCategoryDetails(ModelViewSet):
         try:
             queryset = AddonCategory.objects.all()
             serializer = AddonCategoryGetSerializer(queryset, many=True)
-            # data.append(serializer.data)
-            context = {
-                "status": status.HTTP_200_OK,
-                "message": serializer.data
-            }
-            # return Response(serializer.data, status=status.HTTP_200_OK)
+            context = custom_response(status.HTTP_200_OK, serializer.data, message="Fetched successfully.")
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+
         return JsonResponse(context, safe=False, status=context.get("status"))
 
     def create(self, request, *args, **kwargs):
@@ -767,22 +511,12 @@ class AddonCategoryDetails(ModelViewSet):
                 self.perform_create(serializer)
                 addon_category_obj = AddonCategory.objects.get(id=serializer.data['id'])
                 serializer = AddonCategoryGetSerializer(addon_category_obj)
-                context = {
-                    "status": status.HTTP_201_CREATED,
-                    "message": serializer.data
-                }
-                # return Response(context, status=status.HTTP_201_CREATED)
+                context = custom_response(status.HTTP_201_CREATED, serializer.data, message="Created Successfully.")
             else:
-                context = {
-                    "status": status.HTTP_202_ACCEPTED,
-                    "message": serializer.errors
-                }
+                context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
         except Exception as error:
-            print(error)
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+
         return JsonResponse(context, safe=False)
 
     def partial_update(self, request, pk):
@@ -794,28 +528,15 @@ class AddonCategoryDetails(ModelViewSet):
                 serializer = AddonCategoryGetSerializer(addon_category, data=request.data, partial=True)
                 if serializer.is_valid():
                     serializer.save()
-                    context = {
-                        'status': status.HTTP_200_OK,
-                        'message': serializer.data,
-                    }
-                    return Response(context, status=context.get("status"))
+                    addon_category_obj = AddonCategory.objects.get(id=serializer.data['id'])
+                    serializer = AddonCategoryGetSerializer(addon_category_obj)
+                    context = custom_response(status.HTTP_200_OK, serializer.data, message="Updated Successfully.")
                 else:
-                    context = {
-                        'status': status.HTTP_202_ACCEPTED,
-                        'message': serializer.errors,
-                    }
-                    return Response(context, status=context.get("status"))
+                    context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return Response(context, status=context.get("status"))
 
     def retrieve(self, request, pk=None):
@@ -825,23 +546,12 @@ class AddonCategoryDetails(ModelViewSet):
             try:
                 get_addon_category = AddonCategory.objects.get(id=pk)
                 serializer = AddonCategoryGetSerializer(get_addon_category)
-                # data.append(serializer.data)
-                context = {
-                    "status": status.HTTP_200_OK,
-                    "message": serializer.data
-                }
-                # return Response(data, status=status.HTTP_200_OK)
+                context = custom_response(status.HTTP_200_OK, serializer.data, "Fetched Successfully.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+
         return JsonResponse(context, status=context.get("status"), safe=False)
 
     def destroy(self, request, *args, **kwargs):
@@ -850,22 +560,12 @@ class AddonCategoryDetails(ModelViewSet):
             try:
                 addon_category = self.get_object()
                 addon_category.delete()
-                context = {
-                    "status": status.HTTP_400_BAD_REQUEST,
-                    "message": "Deleted Successfully"
-                }
-                # return Response(data=context,status=context.get("status"))
+                context = custom_response(status.HTTP_200_OK, message="Deleted Successfully.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error),
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+
         return JsonResponse(context, status=context.get('status'), safe=False)
 
 
@@ -879,17 +579,9 @@ class AddonItemsDetails(ModelViewSet):
         try:
             queryset = AddonItem.objects.all()
             serializer = AddonItemGetSerializer(queryset, many=True)
-            # data.append(serializer.data)
-            context = {
-                "status": status.HTTP_200_OK,
-                "message": serializer.data
-            }
-            # return Response(serializer.data, status=status.HTTP_200_OK)
+            context = custom_response(status.HTTP_200_OK, serializer.data, message="Fetched successfully.")
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, safe=False, status=context.get("status"))
 
     def create(self, request, *args, **kwargs):
@@ -900,24 +592,13 @@ class AddonItemsDetails(ModelViewSet):
                 self.perform_create(serializer)
                 addon_item_obj = AddonItem.objects.get(id=serializer.data['id'])
                 serializer = AddonItemGetSerializer(addon_item_obj)
-                context = {
-                    "status": status.HTTP_201_CREATED,
-                    "message": "Created Successfully.",
-                    "data": serializer.data
-                }
-                # return Response(context, status=status.HTTP_201_CREATED)
+                context = custom_response(status.HTTP_201_CREATED, serializer.data, message="Created Successfully.")
             else:
-                context = {
-                    "status": status.HTTP_202_ACCEPTED,
-                    "message": "Unsuccessful",
-                    "data": serializer.errors
-                }
+                context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
         except Exception as error:
             print(error)
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+
         return JsonResponse(context, safe=False)
 
     def partial_update(self, request, pk):
@@ -931,29 +612,13 @@ class AddonItemsDetails(ModelViewSet):
                     serializer.save()
                     addon_item_obj = AddonItem.objects.get(id=serializer.data['id'])
                     serializer = AddonItemGetSerializer(addon_item_obj)
-
-                    context = {
-                        'status': status.HTTP_200_OK,
-                        'message': serializer.data,
-                    }
-                    return Response(context, status=context.get("status"))
+                    context = custom_response(status.HTTP_200_OK, serializer.data, message="Updated Successfully.")
                 else:
-                    context = {
-                        'status': status.HTTP_202_ACCEPTED,
-                        'message': serializer.errors,
-                    }
-                    return Response(context, status=context.get("status"))
+                    context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return Response(context, status=context.get("status"))
 
     def retrieve(self, request, pk=None):
@@ -963,23 +628,11 @@ class AddonItemsDetails(ModelViewSet):
             try:
                 get_addon_item = AddonItem.objects.get(id=pk)
                 serializer = AddonItemGetSerializer(get_addon_item)
-                # data.append(serializer.data)
-                context = {
-                    "status": status.HTTP_200_OK,
-                    "message": serializer.data
-                }
-                # return Response(data, status=status.HTTP_200_OK)
+                context = custom_response(status.HTTP_200_OK, serializer.data, "Fetched Successfully.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, status=context.get("status"), safe=False)
 
     def destroy(self, request, *args, **kwargs):
@@ -988,22 +641,11 @@ class AddonItemsDetails(ModelViewSet):
             try:
                 addon_item = self.get_object()
                 addon_item.delete()
-                context = {
-                    "status": status.HTTP_200_OK,
-                    "message": "Deleted Successfully"
-                }
-                # return Response(data=context,status=context.get("status"))
+                context = custom_response(status.HTTP_200_OK, message="Deleted Successfully.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error),
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, status=context.get('status'), safe=False)
 
 
@@ -1095,19 +737,11 @@ class GetMenuCategory(APIView):
             menu_id = request.query_params['id']
             menu_category = MenuCategory.objects.filter(menu_id=menu_id)
             if not menu_id or not menu_category:
-                context = {
-                    "status": status.HTTP_200_OK,
-                    "message": "No Menu or Menu Category present"
-                }
-                return JsonResponse(context, status=context.get("status"), safe=False)
+                context = custom_response(status.HTTP_200_OK, message="No Menu or Menu Category present.")
             serializer = MenuCategoryGetSerializer(menu_category, many=True)
-            return Response(serializer.data,status=status.HTTP_200_OK)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
-            return JsonResponse(context, status=context.get("status"), safe=False)
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+        return JsonResponse(context, status=context.get("status"), safe=False)
 
 
 class ImageLink(APIView):
@@ -1131,7 +765,9 @@ class ImageLink(APIView):
             image_link = os.path.join(save_path, str(file_obj.name))
             return Response({"image_link":image_link},status=status.HTTP_201_CREATED)
         except Exception as e:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+
+            return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
 
 class Guest(ModelViewSet):
@@ -1145,42 +781,24 @@ class Guest(ModelViewSet):
             queryset = Guests.objects.all()
             serializer = GuestSerializer(queryset, many=True)
             # data.append(serializer.data)
-            context = {
-                "status": status.HTTP_200_OK,
-                "message": serializer.data
-            }
-            # return Response(serializer.data, status=status.HTTP_200_OK)
+            context = custom_response(status.HTTP_200_OK, serializer.data, message="Fetched successfully.")
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, safe=False, status=context.get("status"))
 
     def create(self, request, *args, **kwargs):
         data, context = [], {}
         try:
             serializer = GuestSerializer(data=request.data)
-            if serializer.is_valid(raise_exception=True):
+            if serializer.is_valid():
                 self.perform_create(serializer)
-                context = {
-                    "status": status.HTTP_201_CREATED,
-                    "message": "Created Successfully.",
-                    "data": serializer.data
-                }
-                # return Response(context, status=status.HTTP_201_CREATED)
+                guest_obj = Guests.objects.get(id=serializer.data['id'])
+                serializer = GuestSerializer(guest_obj)
+                context = custom_response(status.HTTP_201_CREATED, serializer.data, message="Created Successfully.")
             else:
-                context = {
-                        "status": status.HTTP_202_ACCEPTED,
-                        "message": "Unsuccessful",
-                        "data": serializer.errors
-                    }
+                context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
         except Exception as error:
-            print(error)
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, safe=False)
 
     def partial_update(self, request, pk):
@@ -1192,28 +810,15 @@ class Guest(ModelViewSet):
                 serializer = GuestSerializer(guest, data=request.data, partial=True)
                 if serializer.is_valid():
                     serializer.save()
-                    context = {
-                        'status': status.HTTP_200_OK,
-                        'message': serializer.data,
-                    }
-                    return Response(context, status=context.get("status"))
+                    guest_obj = Guests.objects.get(id=serializer.data['id'])
+                    serializer = GuestSerializer(guest_obj)
+                    context = custom_response(status.HTTP_200_OK, serializer.data, message="Updated Successfully.")
                 else:
-                    context = {
-                        'status': status.HTTP_202_ACCEPTED,
-                        'message': serializer.errors,
-                    }
-                    return Response(context, status=context.get("status"))
+                    context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return Response(context, status=context.get("status"))
 
     def retrieve(self, request, pk=None):
@@ -1223,23 +828,11 @@ class Guest(ModelViewSet):
             try:
                 get_guest = Guests.objects.get(id=pk)
                 serializer = GuestSerializer(get_guest)
-                # data.append(serializer.data)
-                context = {
-                    "status": status.HTTP_200_OK,
-                    "message": serializer.data
-                }
-                # return Response(data, status=status.HTTP_200_OK)
+                context = custom_response(status.HTTP_200_OK, serializer.data, "Fetched Successfully.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error)
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, status=context.get("status"), safe=False)
 
     def destroy(self, request, *args, **kwargs):
@@ -1248,20 +841,9 @@ class Guest(ModelViewSet):
             try:
                 guest = self.get_object()
                 guest.delete()
-                context = {
-                    "status": status.HTTP_200_OK,
-                    "message": "Deleted Successfully"
-                }
-                # return Response(data=context,status=context.get("status"))
+                context = custom_response(status.HTTP_200_OK, message="Deleted Successfully.")
             except Exception as error:
-                context = {
-                    "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Does not exists."
-                }
-                # return Response(context, status=context.get('status'))
+                context = custom_response(status.HTTP_404_NOT_FOUND)
         except Exception as error:
-            context = {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": str(error),
-            }
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, status=context.get('status'), safe=False)
