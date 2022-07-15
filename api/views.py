@@ -29,10 +29,10 @@ def custom_response(status, data=[], message=""):
             "data": data
         }
     elif status == 400 or status == 202:
+        error_list = list()
         if isinstance(data,str):
             message = data
         else:
-            error_list = list()
             for i,j in data.items():
                 j = "".join(j)
                 message = f"{i}: {j}"
