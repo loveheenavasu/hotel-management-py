@@ -68,7 +68,7 @@ class AssignRole(ModelViewSet):
         data, context = [], {}
         try:
             serializer = RoleSerializer(data=request.data)
-            if serializer.is_valid(raise_exception=True):
+            if serializer.is_valid():
                 self.perform_create(serializer)
                 context = custom_response(status.HTTP_201_CREATED, serializer.data,  "Created Successfully.")
             else:
@@ -176,7 +176,7 @@ class CompanyDetails(ModelViewSet):
         data, context = [], {}
         try:
             serializer = CompanySerializer(data=request.data)
-            if serializer.is_valid(raise_exception=True):
+            if serializer.is_valid():
                 self.perform_create(serializer)
                 company_obj = Company.objects.get(id=serializer.data["id"])
                 serializer = CompanySerializer(company_obj)
@@ -340,7 +340,7 @@ class MenuCategoryDetails(ModelViewSet):
         data, context = [], {}
         try:
             serializer = MenuCategoryEditSerializer(data=request.data)
-            if serializer.is_valid(raise_exception=True):
+            if serializer.is_valid():
                 self.perform_create(serializer)
                 menu_category_obj = MenuCategory.objects.get(id=serializer.data['id'])
                 serializer = MenuCategoryGetSerializer(menu_category_obj)
@@ -423,7 +423,7 @@ class ItemsDetails(ModelViewSet):
         data, context = [], {}
         try:
             serializer = ItemsEditSerializer(data=request.data)
-            if serializer.is_valid(raise_exception=True):
+            if serializer.is_valid():
                 self.perform_create(serializer)
                 item_obj = Items.objects.get(id=serializer.data['id'])
                 serializer = ItemsGetSerializer(item_obj)
