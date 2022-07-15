@@ -27,7 +27,7 @@ urlpatterns = [
      path('user/login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
      # path('user/login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
      path('', include(router.urls)),
-     path('menu_category/', GetMenuCategory.as_view(), name="menu_category"),
+     # path('menu_category/', GetMenuCategory.as_view(), name="menu_category"),
      # Standard  CRUD
      path('standard_data/update/<int:id>/', views.standard_put, name="update"),
      path('standard/delete/<int:id>/', views.standard_delete, name="delete"),

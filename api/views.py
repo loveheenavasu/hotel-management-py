@@ -21,9 +21,11 @@ from pathlib import Path
 
 def custom_response(status, data=[], message=""):
     if status == 404:
+        if not message:
+            message = "Data not found."
         context = {
             "status": status,
-            "message": "Data not found.",
+            "message": message,
             "data": data
         }
     elif status == 400 or status == 202:
@@ -411,10 +413,21 @@ class ItemsDetails(ModelViewSet):
     def list(self, request, *args, **kwargs):
         data, context = [], {}
         try:
-            queryset = Items.objects.all()
-            serializer = ItemsGetSerializer(queryset, many=True)
-            # data.append(serializer.data)
-            context = custom_response(status.HTTP_200_OK, serializer.data, message="Fetched successfully.")
+            menu = request.query_params.get("menu")
+            menu_category = request.query_params.get("menu_category")
+            if not menu or not menu_category:
+                context = custom_response(status.HTTP_404_NOT_FOUND)
+            elif menu and menu_category:
+                queryset = Items.objects.filter(menu=menu,menu_category=menu_category)
+                if queryset.count() != 0:
+                    serializer = ItemsGetSerializer(queryset, many=True)
+                    context = custom_response(status.HTTP_200_OK, serializer.data, message="Fetched successfully.")
+                else:
+                    context = custom_response(status.HTTP_404_NOT_FOUND)
+            else:
+                queryset = Items.objects.all()
+                serializer = ItemsGetSerializer(queryset, many=True)
+                context = custom_response(status.HTTP_200_OK, serializer.data, message="Fetched successfully.")
         except Exception as error:
             context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, safe=False, status=context.get("status"))
@@ -733,12 +746,15 @@ def room_delete(request, id):
 class GetMenuCategory(APIView):
     permission_classes = [IsAdmin, ]
     def get(self, request):
+        context = {}
         try:
             menu_id = request.query_params['id']
             menu_category = MenuCategory.objects.filter(menu_id=menu_id)
             if not menu_id or not menu_category:
-                context = custom_response(status.HTTP_200_OK, message="No Menu or Menu Category present.")
-            serializer = MenuCategoryGetSerializer(menu_category, many=True)
+                context = custom_response(status.HTTP_404_NOT_FOUND)
+            else:
+                serializer = MenuCategoryGetSerializer(menu_category, many=True)
+                context = custom_response(status.HTTP_200_OK, data=serializer.data, message="Fetched successfully.")
         except Exception as error:
             context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, status=context.get("status"), safe=False)
@@ -799,7 +815,7 @@ class Guest(ModelViewSet):
                 context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
         except Exception as error:
             context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
-        return JsonResponse(context, safe=False)
+        return JsonResponse(context, safe=False, status=context.get("status"))
 
     def partial_update(self, request, pk):
         data = []
