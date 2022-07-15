@@ -42,12 +42,6 @@ def custom_response(status, data=[], message=""):
             "message": ", ".join(error_list),
             "data": []
         }
-    # elif status==202:
-    #     context = {
-    #         "status": status,
-    #         "message": data,
-    #         "data": []
-    #     }
     else:
         context = {
             "status": status,
@@ -813,8 +807,8 @@ class Guest(ModelViewSet):
             serializer = GuestSerializer(data=request.data)
             if serializer.is_valid():
                 self.perform_create(serializer)
-                guest_obj = Guests.objects.get(id=serializer.data['id'])
-                serializer = GuestSerializer(guest_obj)
+                # guest_obj = Guests.objects.get(id=serializer.data['id'])
+                # serializer = GuestSerializer(guest_obj)
                 context = custom_response(status.HTTP_201_CREATED, serializer.data, message="Created Successfully.")
             else:
                 context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
