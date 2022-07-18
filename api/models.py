@@ -218,7 +218,7 @@ class Guests(models.Model):
     city = models.CharField(max_length=100, null=True, blank=True)
     pincode = models.IntegerField(null=True, blank=True)
     tag_along_guests = models.CharField(max_length=100, null=True, blank=True)
-    check_in = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    check_in = models.DateTimeField(null=True, blank=True)
     check_out = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)

@@ -17,6 +17,7 @@ import json
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from pathlib import Path
+from .uploadToS3 import get_file_name, upload_to_aws
 
 
 def custom_response(status, data=[], message=""):
@@ -37,6 +38,7 @@ def custom_response(status, data=[], message=""):
                 j = "".join(j)
                 message = f"{i}: {j}"
                 error_list.append(message)
+
         context = {
             "status": status,
             "message": ", ".join(error_list),
@@ -762,27 +764,46 @@ class GetMenuCategory(APIView):
 class ImageLink(APIView):
     def post(self, request):
         try:
-            # host = 'https://hotel-management-live.herokuapp.com'
-            file_obj = request.FILES['image']
-            print(file_obj.name)
-            BASE_DIR = Path(__file__).resolve().parent.parent
-            # img_extension = os.path.splitext(file_obj.name)[1]
-            # save_path = os.path.join(os.path.join(host, BASE_DIR), 'images/')
-            # save_path = os.path.join(str(BASE_DIR), 'images\\')
-            if not os.path.exists(save_path):
-                os.makedirs(save_path)
-
-            with open(os.path.join(save_path+str(file_obj.name)), "wb+") as file:
-                for chunk in file_obj.chunks():
-                    file.write(chunk)
-
-            # image_link = os.path.join(host+save_path,str(file_obj.name))
-            image_link = os.path.join(save_path, str(file_obj.name))
-            return Response({"image_link":image_link},status=status.HTTP_201_CREATED)
-        except Exception as e:
+            data = request.data
+            local_file =data.get('image')
+            var_name = data.get("var_name")
+            try:
+                link_generated, link = upload_to_aws(local_file, var_name)
+                context = custom_response(status.HTTP_200_OK, data=link, message="Uploaded successfully.")
+            except Exception as error:
+                context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+        except Exception as error:
             context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+        return JsonResponse(context, status=context.get("status"), safe=False)
 
-            return Response(context, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+        # try:
+        #     # host = 'https://hotel-management-live.herokuapp.com'
+        #     file_obj = request.FILES['image']
+        #     print(file_obj.name)
+        #     BASE_DIR = Path(__file__).resolve().parent.parent
+        #     # img_extension = os.path.splitext(file_obj.name)[1]
+        #     # save_path = os.path.join(os.path.join(host, BASE_DIR), 'images/')
+        #     # save_path = os.path.join(str(BASE_DIR), 'images\\')
+        #     if not os.path.exists(save_path):
+        #         os.makedirs(save_path)
+        #
+        #     with open(os.path.join(save_path+str(file_obj.name)), "wb+") as file:
+        #         for chunk in file_obj.chunks():
+        #             file.write(chunk)
+        #
+        #     # image_link = os.path.join(host+save_path,str(file_obj.name))
+        #     image_link = os.path.join(save_path, str(file_obj.name))
+        #     return Response({"image_link":image_link},status=status.HTTP_201_CREATED)
+        # except Exception as e:
+        #     context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+        #
+        #     return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
 
 class Guest(ModelViewSet):
