@@ -10,6 +10,16 @@ class Role(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
 
+class Hotel(models.Model):
+    hotel_name = models.CharField(max_length=255, null=True, blank=True)
+    location = models.CharField(max_length=255, null=True, blank=True)
+    email = models.CharField(max_length=255, null=True, blank=True, unique=True)
+    phone_number = models.BigIntegerField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    brand_colour = models.CharField(max_length=255, null=True, blank=True)
+    cover_image = models.CharField(max_length=500, null=True, blank=True)
+
+
 class UserManager(BaseUserManager):
     def _create_user(self, email: str, password: str = None, **kwargs):
         if not email:
@@ -51,6 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_admin = models.BooleanField(default=False)
     is_user = models.BooleanField(default=True)
     roles = models.ForeignKey(Role, on_delete=models.CASCADE, null=True, blank=True)
+    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_created=True, auto_now=True)
     modified_at = models.DateTimeField(auto_now=True)
 
@@ -67,6 +78,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(auto_now_add=True)
     contact = models.BigIntegerField(null=True, blank=True)
     is_contact_verified = models.BooleanField(default=False)
+    company_name = models.CharField(max_length=300, null=True, blank=True)
+    logo = models.CharField(max_length=300, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     USERNAME_FIELD = 'email'
@@ -269,6 +282,7 @@ class OrderItem(models.Model):
 #     name = models.CharField(max_length=255)
 #     company = models.CharField(max_length=255)
 #     created = models.DateTimeField(auto_now_add=True)
+
 
 
 

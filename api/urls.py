@@ -21,6 +21,7 @@ router.register(r'standard/data', StandardGet, basename='standard_data'),
 router.register(r'room/edit', RoomEdit, basename='room_edit'),
 router.register(r'room', RoomGet, basename='room'),
 router.register(r'guest', Guest, basename='guest'),
+router.register(r'hotel', HotelDetails, basename='hotel'),
 
 
 urlpatterns = [
@@ -36,12 +37,12 @@ urlpatterns = [
      path('room/update/<int:id>/', views.room_put, name="update"),
      path('room/delete/<int:id>/', views.room_delete, name="delete"),
      path('get-menu-category', GetMenuCategory.as_view(), name="get-menu-category"),
-     path('image-link', ImageLink.as_view(), name="image-link"),
+     # path('image-link', ImageLink.as_view(), name="image-link"),
 
 ]
-urlpatterns += [
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
+# if settings.DEBUG:
+#      urlpatterns += static(settings.MEDIA_URL,
+#                            document_root=settings.MEDIA_ROOT)
 
 
 

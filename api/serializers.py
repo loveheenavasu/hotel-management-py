@@ -200,3 +200,11 @@ class GuestSerializer(serializers.ModelSerializer):
         model = Guests
         fields = '__all__'
 
+
+class HotelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Hotel
+        fields = '__all__'
+
+
+
