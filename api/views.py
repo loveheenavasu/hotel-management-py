@@ -1,6 +1,7 @@
 from rest_framework.permissions import AllowAny
 from .serializers import *
 from .models import *
+from boto3.session import Session
 from rest_framework.exceptions import ValidationError
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -13,11 +14,12 @@ from rest_framework.views import APIView
 from datetime import datetime
 from django.core.files.storage import default_storage
 import os
+from django.conf import settings
 import json
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from pathlib import Path
-from .uploadToS3 import get_file_name, upload_to_aws
+from .uploadToS3 import upload_to_s3
 
 
 def custom_response(status, data=[], message=""):
@@ -92,7 +94,7 @@ class AssignRole(ModelViewSet):
 
 # User Register Crud
 class UserEdit(ModelViewSet):
-    permission_classes = [IsAdmin, ]
+    permission_classes = [AllowAny, ]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -168,8 +170,39 @@ class UserEdit(ModelViewSet):
             context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, status=context.get('status'), safe=False)
 
+# ACCESS_KEY = "AKIAV7HQPSSGAZMT53DW"
+# bucket_name = "restaurant-images-bucket"
+# SECRET_KEY = "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"
+class ImageLink(APIView):
 
+    def post(self, request):
+        try:
+            file_obj = request.FILES['image']
+            var_name = request.data.get('var_name')
+            image_name = os.path.splitext(str(file_obj))[0]
+            image_extension = os.path.splitext(str(file_obj))[1]
+            file_name = f"{var_name}/{image_name}{image_extension}"
 
+            if image_extension in ['.svg']:
+                content_type = 'image/svg+xml'
+            else:
+                content_type = 'image/jpg'
+
+            url = upload_to_s3(file_name, file_obj, content_type)
+
+            # session = Session(aws_access_key_id=settings.ACCESS_KEY,
+            #                   aws_secret_access_key=settings.AWS_SECRET_KEY)
+            # s3 = session.resource('s3')
+            # s3.Bucket(settings.BUCKET_NAME).put_object(Key=file_name, Body=request.FILES['image'], ContentType=content_type)
+            # url = f"https://{settings.BUCKET_NAME}.s3.amazonaws.com/{file_name}"
+            # s3.Bucket(bucket_name).put_object(Key=file_name, Body=request.FILES['image'], ContentType="image/jpg")
+            # url = f"https://{bucket_name}.s3.amazonaws.com/{file_name}"
+            # uploaded, url = upload_to_aws(str(file_obj), file_name)
+            context = custom_response(status.HTTP_201_CREATED, url, message="Link generated successfully.")
+            return JsonResponse(context, safe=False, status=context.get("status"))
+        except Exception as error:
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+            return JsonResponse(context, safe=False, status=context.get("status"))
 
 
 class CompanyDetails(ModelViewSet):
@@ -200,7 +233,7 @@ class CompanyDetails(ModelViewSet):
                 context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
         except Exception as error:
             context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
-        return JsonResponse(context, safe=False)
+        return JsonResponse(context, safe=False, status=context.get("status"))
 
     def partial_update(self, request, pk):
         data = []

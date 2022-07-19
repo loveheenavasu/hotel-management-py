@@ -37,7 +37,7 @@ urlpatterns = [
      path('room/update/<int:id>/', views.room_put, name="update"),
      path('room/delete/<int:id>/', views.room_delete, name="delete"),
      path('get-menu-category', GetMenuCategory.as_view(), name="get-menu-category"),
-     # path('image-link', ImageLink.as_view(), name="image-link"),
+     path('image-link', ImageLink.as_view(), name="image-link"),
 
 ]
 # if settings.DEBUG:
