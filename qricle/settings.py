@@ -185,3 +185,6 @@ django_heroku.settings(locals())
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
+ACCESS_KEY = "AKIAV7HQPSSGAZMT53DW"
+BUCKET_NAME = "restaurant-images-bucket"
+AWS_SECRET_KEY = "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"

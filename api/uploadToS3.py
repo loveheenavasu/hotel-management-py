@@ -6,23 +6,23 @@ from boto3.session import Session
 from django.conf import settings
 
 # print(os.getcwd())
-ACCESS_KEY = os.environ.get('ACCESS_KEY')
-SECRET_KEY = os.environ.get('SECRET_KEY')
-BUCKET_NAME = os.environ.get('BUCKET_NAME')
+# ACCESS_KEY = os.environ.get('ACCESS_KEY')
+# SECRET_KEY = os.environ.get('SECRET_KEY')
+# BUCKET_NAME = os.environ.get('BUCKET_NAME')
 
 
 
 def upload_to_s3(file_name, body, content_type):
     try:
-        session = Session(aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY)
-        s3 = session.resource('s3')
-        s3.Bucket(BUCKET_NAME).put_object(Key=file_name, Body=body, ContentType=content_type)
-        url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{file_name}"
-
-        # session = Session(aws_access_key_id=settings.ACCESS_KEY, aws_secret_access_key=settings.AWS_SECRET_KEY)
+        # session = Session(aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY)
         # s3 = session.resource('s3')
-        # s3.Bucket(settings.BUCKET_NAME).put_object(Key=file_name, Body=body, ContentType=content_type)
-        # url = f"https://{settings.BUCKET_NAME}.s3.amazonaws.com/{file_name}"
+        # s3.Bucket(BUCKET_NAME).put_object(Key=file_name, Body=body, ContentType=content_type)
+        # url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{file_name}"
+
+        session = Session(aws_access_key_id=settings.ACCESS_KEY, aws_secret_access_key=settings.AWS_SECRET_KEY)
+        s3 = session.resource('s3')
+        s3.Bucket(settings.BUCKET_NAME).put_object(Key=file_name, Body=body, ContentType=content_type)
+        url = f"https://{settings.BUCKET_NAME}.s3.amazonaws.com/{file_name}"
 
         return url
     except FileNotFoundError:
