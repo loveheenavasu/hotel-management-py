@@ -23,7 +23,6 @@ def upload_to_s3(file_name, body, content_type):
         s3 = session.resource('s3')
         s3.Bucket(settings.BUCKET_NAME).put_object(Key=file_name, Body=body, ContentType=content_type)
         url = f"https://{settings.BUCKET_NAME}.s3.amazonaws.com/{file_name}"
-
         return url
     except FileNotFoundError:
         print("The file was not found")
@@ -31,7 +30,8 @@ def upload_to_s3(file_name, body, content_type):
     except NoCredentialsError:
         print("Credentials not available")
         return False
-
+    except Exception as error:
+        return "Unable to connect:  " + str(error)
 
 
 

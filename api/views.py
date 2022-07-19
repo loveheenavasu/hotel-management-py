@@ -170,9 +170,7 @@ class UserEdit(ModelViewSet):
             context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, status=context.get('status'), safe=False)
 
-# ACCESS_KEY = "AKIAV7HQPSSGAZMT53DW"
-# bucket_name = "restaurant-images-bucket"
-# SECRET_KEY = "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"
+
 class ImageLink(APIView):
 
     def post(self, request):
