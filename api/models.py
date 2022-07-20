@@ -81,7 +81,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_contact_verified = models.BooleanField(default=False)
     company_name = models.CharField(max_length=300, null=True, blank=True)
     logo = models.CharField(max_length=300, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
@@ -96,7 +95,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Company(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
-    logo = models.ImageField()
+    logo = models.CharField(max_length=300, null=True, blank=True)
     owner = models.CharField(max_length=255, null=True, blank=True)
     subdomain = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
@@ -106,7 +105,7 @@ class Company(models.Model):
 class Menu(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, unique=True)
-    image = models.ImageField()
+    image = models.CharField(max_length=300, null=True, blank=True)
     time_scheduling = models.BooleanField()
     earnings = models.DecimalField(max_digits=10, default=0, decimal_places=2)
     item_stock = models.IntegerField(default=0)
@@ -186,7 +185,7 @@ class AddonItem(models.Model):
 class Items(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    image = models.ImageField()
+    image = models.CharField(max_length=300, null=True, blank=True)
     price = models.CharField(max_length=255)
     disc_price = models.CharField(max_length=255)
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True, blank=True)
