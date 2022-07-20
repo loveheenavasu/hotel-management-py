@@ -7,7 +7,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .permissions import IsUser, IsStaff, IsAdmin
+from .permissions import IsUser, IsStaff, IsAdmin ,IsGeneralManager
 from rest_framework.decorators import action
 from rest_framework import status
 from rest_framework.views import APIView
@@ -1060,3 +1060,11 @@ class HotelDetails(ModelViewSet):
             context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, status=context.get('status'), safe=False)
 
+
+class Test(APIView):
+    permission_classes = [IsGeneralManager, ]
+
+    def get(self, request):
+        hotel = Hotel.objects.all()
+        serializer = HotelSerializer(hotel, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

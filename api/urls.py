@@ -38,6 +38,9 @@ urlpatterns = [
      path('room/delete/<int:id>/', views.room_delete, name="delete"),
      path('get-menu-category', GetMenuCategory.as_view(), name="get-menu-category"),
      path('image-link', ImageLink.as_view(), name="image-link"),
+     # path('csv/', CsvRead.as_view(), name="csv"),
+     path('test', Test.as_view(), name="test"),
+
 
 ]
 # if settings.DEBUG:
