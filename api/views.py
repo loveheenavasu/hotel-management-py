@@ -1061,10 +1061,19 @@ class HotelDetails(ModelViewSet):
         return JsonResponse(context, status=context.get('status'), safe=False)
 
 
-class Test(APIView):
-    permission_classes = [IsGeneralManager, ]
+# class Test(APIView):
+#     permission_classes = [IsGeneralManager, ]
+#
+#     def get(self, request):
+#         hotel = Hotel.objects.all()
+#         serializer = HotelSerializer(hotel, many=True)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def get(self, request):
-        hotel = Hotel.objects.all()
-        serializer = HotelSerializer(hotel, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+# from io import StringIO
+# import csv
+# class Text(APIView):
+#     permission_classes = [AllowAny, ]
+#
+#     def get(self, request):
+#         queryset = Items.objects.all()
+#         df = read_frame(queryset)

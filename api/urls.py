@@ -39,7 +39,8 @@ urlpatterns = [
      path('get-menu-category', GetMenuCategory.as_view(), name="get-menu-category"),
      path('image-link', ImageLink.as_view(), name="image-link"),
      # path('csv/', CsvRead.as_view(), name="csv"),
-     path('test', Test.as_view(), name="test"),
+     # path('test', Test.as_view(), name="test"),
+     # path('text', Text.as_view(), name="text"),
 
 
 ]

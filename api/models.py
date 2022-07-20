@@ -191,6 +191,7 @@ class Items(models.Model):
     disc_price = models.CharField(max_length=255)
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True, blank=True)
     menu_category = models.ForeignKey(MenuCategory, on_delete=models.CASCADE, null=True, blank=True)
+    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, null=True, blank=True)
     addon_category = models.ForeignKey(AddonCategory, on_delete=models.CASCADE, null=True, blank=True)
     is_veg = models.BooleanField()
     is_recommended = models.BooleanField()
