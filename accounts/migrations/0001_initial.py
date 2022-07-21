@@ -9,10 +9,6 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        ('auth', '0014_user_last_login'),
-    ]
-
     operations = [
         migrations.CreateModel(
             name='Role',
