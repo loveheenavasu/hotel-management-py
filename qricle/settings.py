@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'api',
+    'accounts',
+    'orders',
     'rest_framework',
     'rest_framework_simplejwt',
 ]
@@ -61,7 +63,7 @@ MIDDLEWARE = [
 
 ]
 
-AUTH_USER_MODEL = 'api.User'
+AUTH_USER_MODEL = 'accounts.User'
 
 ROOT_URLCONF = 'qricle.urls'
 

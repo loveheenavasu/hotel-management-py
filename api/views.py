@@ -1,25 +1,16 @@
-from rest_framework.permissions import AllowAny
+from accounts.views import *
 from .serializers import *
 from .models import *
-from boto3.session import Session
-from rest_framework.exceptions import ValidationError
 from rest_framework.viewsets import ModelViewSet
-from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .permissions import IsUser, IsStaff, IsAdmin ,IsGeneralManager
-from rest_framework.decorators import action
+from accounts.permissions import IsUser, IsStaff, IsAdmin
 from rest_framework import status
 from rest_framework.views import APIView
-from datetime import datetime
-from django.core.files.storage import default_storage
-import os
-from django.conf import settings
-import json
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from pathlib import Path
 from .uploadToS3 import upload_to_s3
+import os
 
 
 def custom_response(status, data=[], message=""):
@@ -64,111 +55,6 @@ def custom_response(status, data=[], message=""):
             "data": data
         }
     return context
-
-
-# Token authentication
-class MyTokenObtainPairView(TokenObtainPairView):
-    permission_classes = (AllowAny,)
-    serializer_class = MyTokenObtainPairSerializer
-
-
-# Assign role to user
-class AssignRole(ModelViewSet):
-    permission_classes = (AllowAny,)
-    queryset = Role.objects.all()
-    serializer_class = RoleSerializer
-
-    def create(self, request, *args, **kwargs):
-        data, context = [], {}
-        try:
-            serializer = RoleSerializer(data=request.data)
-            if serializer.is_valid():
-                self.perform_create(serializer)
-                context = custom_response(status.HTTP_201_CREATED, serializer.data,  "Created Successfully.")
-            else:
-                context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors,  "Unsuccessful.")
-        except Exception as error:
-            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
-        return JsonResponse(context, safe=False, status=context.get("status"))
-
-
-# User Register Crud
-class UserEdit(ModelViewSet):
-    permission_classes = [AllowAny, ]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-    def list(self, request, *args, **kwargs):
-        data, context = [], {}
-        try:
-            queryset = User.objects.all()
-            serializer = UserSerializer(queryset, many=True)
-            context = custom_response(status.HTTP_200_OK, serializer.data, "Fetched Successfully.")
-        except Exception as error:
-            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
-        return JsonResponse(context, safe=False, status=context.get("status"))
-
-    def create(self, request, *args, **kwargs):
-        data, context = [], {}
-        try:
-            serializer = UserSerializer(data=request.data)
-            if serializer.is_valid():
-                self.perform_create(serializer)
-                user_obj = User.objects.get(id=serializer.data["id"])
-                serializer = UserSerializer(user_obj)
-                context = custom_response(status.HTTP_201_CREATED, serializer.data, "Created Successfully.")
-            else:
-                context = custom_response(status.HTTP_400_BAD_REQUEST, serializer.errors, "Unsuccessful.")
-        except Exception as error:
-            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
-        return JsonResponse(context, safe=False)
-
-    def partial_update(self, request, pk):
-        data = []
-        try:
-            try:
-                queryset = User.objects.all()
-                user = get_object_or_404(queryset, pk=pk)
-                serializer = UserSerializer(user, data=request.data, partial=True)
-                if serializer.is_valid():
-                    serializer.save()
-                    user_obj = User.objects.get(id=serializer.data["id"])
-                    serializer = UserSerializer(user_obj)
-                    context = custom_response(status.HTTP_200_OK, serializer.data, "Updated Successfully.")
-                else:
-                    context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, "Unsuccessful.")
-            except Exception as error:
-                context = custom_response(status.HTTP_404_NOT_FOUND)
-        except Exception as error:
-            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
-        return Response(context, status=context.get("status"))
-
-    def retrieve(self, request, pk=None):
-        data = []
-        context = {}
-        try:
-            try:
-                get_user = User.objects.get(id=pk)
-                serializer = UserSerializer(get_user)
-                context = custom_response(status.HTTP_200_OK, serializer.data, "Fetched Successfully.")
-            except Exception as error:
-                context = custom_response(status.HTTP_404_NOT_FOUND)
-        except Exception as error:
-            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
-        return JsonResponse(context, status=context.get("status"), safe=False)
-
-    def destroy(self, request, *args, **kwargs):
-        data, context = [], {}
-        try:
-            try:
-                user = self.get_object()
-                user.delete()
-                context = custom_response(status.HTTP_200_OK, message="Deleted Successfully")
-            except Exception as error:
-                context = custom_response(status.HTTP_404_NOT_FOUND)
-        except Exception as error:
-            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
-        return JsonResponse(context, status=context.get('status'), safe=False)
 
 
 class ImageLink(APIView):
@@ -231,7 +117,7 @@ class CompanyDetails(ModelViewSet):
                 context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
         except Exception as error:
             context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
-        return JsonResponse(context, safe=False, status=context.get("status"))
+        return JsonResponse(context, safe=False)
 
     def partial_update(self, request, pk):
         data = []
@@ -769,124 +655,124 @@ def standard_delete(request, id):
 
 
 # Room Crud
-# class RoomDetails(ModelViewSet):
-#     permission_classes = [IsAdmin, ]
-#     queryset = Room.objects.all()
-#     serializer_class = RoomGetSerializer
-#
-#     def list(self, request, *args, **kwargs):
-#         data, context = [], {}
-#         try:
-#             queryset = Room.objects.all()
-#             serializer = RoomGetSerializer(queryset, many=True)
-#             context = custom_response(status.HTTP_200_OK, serializer.data, message="Fetched successfully.")
-#         except Exception as error:
-#             context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
-#         return JsonResponse(context, safe=False, status=context.get("status"))
-#
-#     def create(self, request, *args, **kwargs):
-#         data, context = [], {}
-#         try:
-#             serializer = AddonItemEditSerializer(data=request.data)
-#             if serializer.is_valid(raise_exception=False):
-#                 self.perform_create(serializer)
-#                 addon_item_obj = AddonItem.objects.get(id=serializer.data['id'])
-#                 serializer = AddonItemGetSerializer(addon_item_obj)
-#                 context = custom_response(status.HTTP_201_CREATED, serializer.data, message="Created Successfully.")
-#             else:
-#                 context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
-#         except Exception as error:
-#             print(error)
-#             context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
-#
-#         return JsonResponse(context, safe=False)
-#
-#     def partial_update(self, request, pk):
-#         data = []
-#         try:
-#             try:
-#                 queryset = AddonItem.objects.all()
-#                 addon_item = get_object_or_404(queryset, pk=pk)
-#                 serializer = AddonItemEditSerializer(addon_item, data=request.data, partial=True)
-#                 if serializer.is_valid():
-#                     serializer.save()
-#                     addon_item_obj = AddonItem.objects.get(id=serializer.data['id'])
-#                     serializer = AddonItemGetSerializer(addon_item_obj)
-#                     context = custom_response(status.HTTP_200_OK, serializer.data, message="Updated Successfully.")
-#                 else:
-#                     context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
-#             except Exception as error:
-#                 context = custom_response(status.HTTP_404_NOT_FOUND)
-#         except Exception as error:
-#             context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
-#         return Response(context, status=context.get("status"))
-#
-#     def retrieve(self, request, pk=None):
-#         data = []
-#         context = {}
-#         try:
-#             try:
-#                 get_addon_item = AddonItem.objects.get(id=pk)
-#                 serializer = AddonItemGetSerializer(get_addon_item)
-#                 context = custom_response(status.HTTP_200_OK, serializer.data, "Fetched Successfully.")
-#             except Exception as error:
-#                 context = custom_response(status.HTTP_404_NOT_FOUND)
-#         except Exception as error:
-#             context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
-#         return JsonResponse(context, status=context.get("status"), safe=False)
-#
-#     def destroy(self, request, *args, **kwargs):
-#         data, context = [], {}
-#         try:
-#             try:
-#                 addon_item = self.get_object()
-#                 addon_item.delete()
-#                 context = custom_response(status.HTTP_200_OK, message="Deleted Successfully.")
-#             except Exception as error:
-#                 context = custom_response(status.HTTP_404_NOT_FOUND)
-#         except Exception as error:
-#             context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
-#         return JsonResponse(context, status=context.get('status'), safe=False)
-
-
-class RoomEdit(ModelViewSet):
-    permission_classes = [IsAdmin, ]
-    queryset = Room.objects.all()
-    serializer_class = RoomEditSerializer
-
-
-class RoomGet(ModelViewSet):
+class RoomDetails(ModelViewSet):
     permission_classes = [IsAdmin, ]
     queryset = Room.objects.all()
     serializer_class = RoomGetSerializer
 
+    def list(self, request, *args, **kwargs):
+        data, context = [], {}
+        try:
+            queryset = Room.objects.all()
+            serializer = RoomGetSerializer(queryset, many=True)
+            context = custom_response(status.HTTP_200_OK, serializer.data, message="Fetched successfully.")
+        except Exception as error:
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+        return JsonResponse(context, safe=False, status=context.get("status"))
 
-@api_view(['PUT'])
-def room_put(request, id):
-    try:
-        student = Room.objects.get(id=id)
-    except Room.DoesNotExist:
-        return Response("id not found")
-    if request.method == "PUT":
-        data = request.data
-        serial = RoomEditSerializer(student, data=data)
-        if serial.is_valid():
-            serial.save()
-            return Response({"msg": "Data Updated"})
-        else:
-            return Response(serial.errors)
+    def create(self, request, *args, **kwargs):
+        data, context = [], {}
+        try:
+            serializer = RoomEditSerializer(data=request.data)
+            if serializer.is_valid(raise_exception=False):
+                self.perform_create(serializer)
+                addon_item_obj = Room.objects.get(id=serializer.data['id'])
+                serializer = RoomGetSerializer(addon_item_obj)
+                context = custom_response(status.HTTP_201_CREATED, serializer.data, message="Created Successfully.")
+            else:
+                context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
+        except Exception as error:
+            print(error)
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+
+        return JsonResponse(context, safe=False)
+
+    def partial_update(self, request, pk):
+        data = []
+        try:
+            try:
+                queryset = Room.objects.all()
+                addon_item = get_object_or_404(queryset, pk=pk)
+                serializer = RoomEditSerializer(addon_item, data=request.data, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+                    addon_item_obj = Room.objects.get(id=serializer.data['id'])
+                    serializer = RoomGetSerializer(addon_item_obj)
+                    context = custom_response(status.HTTP_200_OK, serializer.data, message="Updated Successfully.")
+                else:
+                    context = custom_response(status.HTTP_202_ACCEPTED, serializer.errors, message="Unsuccessful.")
+            except Exception as error:
+                context = custom_response(status.HTTP_404_NOT_FOUND)
+        except Exception as error:
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+        return Response(context, status=context.get("status"))
+
+    def retrieve(self, request, pk=None):
+        data = []
+        context = {}
+        try:
+            try:
+                get_addon_item = Room.objects.get(id=pk)
+                serializer = RoomGetSerializer(get_addon_item)
+                context = custom_response(status.HTTP_200_OK, serializer.data, "Fetched Successfully.")
+            except Exception as error:
+                context = custom_response(status.HTTP_404_NOT_FOUND)
+        except Exception as error:
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+        return JsonResponse(context, status=context.get("status"), safe=False)
+
+    def destroy(self, request, *args, **kwargs):
+        data, context = [], {}
+        try:
+            try:
+                addon_item = self.get_object()
+                addon_item.delete()
+                context = custom_response(status.HTTP_200_OK, message="Deleted Successfully.")
+            except Exception as error:
+                context = custom_response(status.HTTP_404_NOT_FOUND)
+        except Exception as error:
+            context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
+        return JsonResponse(context, status=context.get('status'), safe=False)
 
 
-@api_view(['DELETE'])
-def room_delete(request, id):
-    try:
-        student = Room.objects.get(id=id)
-    except Room.DoesNotExist:
-        return Response("id not found")
-    if request.method == "DELETE":
-        Room.objects.get(id=id).delete()
-        return Response({"msg": "Data deleted"})
+# class RoomEdit(ModelViewSet):
+#     permission_classes = [IsAdmin, ]
+#     queryset = Room.objects.all()
+#     serializer_class = RoomEditSerializer
 
+
+# class RoomGet(ModelViewSet):
+#     permission_classes = [IsAdmin, ]
+#     queryset = Room.objects.all()
+#     serializer_class = RoomGetSerializer
+#
+#
+# @api_view(['PUT'])
+# def room_put(request, id):
+#     try:
+#         student = Room.objects.get(id=id)
+#     except Room.DoesNotExist:
+#         return Response("id not found")
+#     if request.method == "PUT":
+#         data = request.data
+#         serial = RoomEditSerializer(student, data=data)
+#         if serial.is_valid():
+#             serial.save()
+#             return Response({"msg": "Data Updated"})
+#         else:
+#             return Response(serial.errors)
+#
+#
+# @api_view(['DELETE'])
+# def room_delete(request, id):
+#     try:
+#         student = Room.objects.get(id=id)
+#     except Room.DoesNotExist:
+#         return Response("id not found")
+#     if request.method == "DELETE":
+#         Room.objects.get(id=id).delete()
+#         return Response({"msg": "Data deleted"})
+#
 
 class GetMenuCategory(APIView):
     permission_classes = [IsAdmin, ]
@@ -1059,21 +945,3 @@ class HotelDetails(ModelViewSet):
         except Exception as error:
             context = custom_response(status.HTTP_400_BAD_REQUEST, data=str(error))
         return JsonResponse(context, status=context.get('status'), safe=False)
-
-
-# class Test(APIView):
-#     permission_classes = [IsGeneralManager, ]
-#
-#     def get(self, request):
-#         hotel = Hotel.objects.all()
-#         serializer = HotelSerializer(hotel, many=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-
-# from io import StringIO
-# import csv
-# class Text(APIView):
-#     permission_classes = [AllowAny, ]
-#
-#     def get(self, request):
-#         queryset = Items.objects.all()
-#         df = read_frame(queryset)

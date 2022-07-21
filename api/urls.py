@@ -1,7 +1,5 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from django.conf import settings
-from django.conf.urls.static import static
 from .views import *
 from . import views
 
@@ -18,8 +16,9 @@ router.register(r'addon/category', AddonCategoryDetails, basename='addonCategory
 router.register(r'addon/item', AddonItemsDetails, basename='addon_item'),
 router.register(r'standard/edit', StandardEdit, basename='standard_edit'),
 router.register(r'standard/data', StandardGet, basename='standard_data'),
-router.register(r'room/edit', RoomEdit, basename='room_edit'),
-router.register(r'room', RoomGet, basename='room'),
+# router.register(r'room/edit', RoomEdit, basename='room_edit'),
+# router.register(r'room', RoomGet, basename='room'),
+router.register(r'room', RoomDetails, basename='room'),
 router.register(r'guest', Guest, basename='guest'),
 router.register(r'hotel', HotelDetails, basename='hotel'),
 
@@ -34,26 +33,12 @@ urlpatterns = [
      path('standard/delete/<int:id>/', views.standard_delete, name="delete"),
 
      # Room  CRUD
-     path('room/update/<int:id>/', views.room_put, name="update"),
-     path('room/delete/<int:id>/', views.room_delete, name="delete"),
+     # path('room/update/<int:id>/', views.room_put, name="update"),
+     # path('room/delete/<int:id>/', views.room_delete, name="delete"),
      path('get-menu-category', GetMenuCategory.as_view(), name="get-menu-category"),
-     path('image-link', ImageLink.as_view(), name="image-link"),
-     # path('csv/', CsvRead.as_view(), name="csv"),
-     # path('test', Test.as_view(), name="test"),
-     # path('text', Text.as_view(), name="text"),
-
+     # path('image-link', ImageLink.as_view(), name="image-link"),
 
 ]
 # if settings.DEBUG:
 #      urlpatterns += static(settings.MEDIA_URL,
 #                            document_root=settings.MEDIA_ROOT)
-
-
-
-
-
-
-
-
-
-
